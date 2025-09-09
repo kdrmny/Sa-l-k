@@ -860,7 +860,7 @@
                     </div>
                     
                     <div class="card">
-                        <h3 data-tr="Aktif Taleplerim" data-en="My Active Requests">Aktif Taleplerim</h3>
+                        <h3 data-tr="Taleplerım" data-en="My Requests">Taleplerim</h3>
                         <div id="clinicRequests">
                             <div class="loading">
                                 <span data-tr="Talepler yükleniyor..." data-en="Loading requests...">Talepler yükleniyor...</span>
@@ -875,39 +875,46 @@
         <div id="suppliers" class="page">
             <div class="glass-card">
                 <h2 data-tr="Tedarikçi Paneli" data-en="Supplier Panel">Tedarikçi Paneli</h2>
-                <p data-tr="Mevcut talepleri görüntüleyin ve teklif verin" data-en="View available requests and submit offers">Mevcut talepleri görüntüleyin ve teklif verin</p>
+                <p data-tr="Açık talepleri görün ve teklif verin" data-en="View open requests and submit offers">Açık talepleri görün ve teklif verin</p>
                 
                 <div class="grid grid-2" style="margin-top: 32px;">
                     <div class="card">
-                        <h3 data-tr="Tedarikçi Kaydı" data-en="Supplier Registration">Tedarikçi Kaydı</h3>
-                        <form id="supplierRegistrationForm">
+                        <h3 data-tr="Tedarikçi Profili" data-en="Supplier Profile">Tedarikçi Profili</h3>
+                        <form id="supplierProfileForm">
                             <div class="form-group">
                                 <label class="form-label" data-tr="Şirket Adı" data-en="Company Name">Şirket Adı</label>
-                                <input type="text" class="form-input" id="companyName" required>
+                                <input type="text" class="form-input" id="companyName">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" data-tr="E-posta" data-en="Email">E-posta</label>
-                                <input type="email" class="form-input" id="email" required>
+                                <label class="form-label" data-tr="Vergi Numarası" data-en="Tax Number">Vergi Numarası</label>
+                                <input type="text" class="form-input" id="taxNumber">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" data-tr="Telefon" data-en="Phone">Telefon</label>
-                                <input type="tel" class="form-input" id="phone" required>
+                                <label class="form-label" data-tr="MERSİS No" data-en="MERSIS No">MERSİS No</label>
+                                <input type="text" class="form-input" id="mersisNumber">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" data-tr="Uzmanlık Alanları" data-en="Specialties">Uzmanlık Alanları</label>
-                                <select class="form-select" id="specialties" multiple>
-                                    <option value="medical-device">Tıbbi Cihaz</option>
-                                    <option value="consumables">Sarf Malzeme</option>
-                                    <option value="laboratory">Laboratuvar</option>
-                                    <option value="imaging">Görüntüleme</option>
-                                    <option value="veterinary">Veteriner</option>
-                                    <option value="beauty">Güzellik</option>
-                                </select>
+                                <label class="form-label" data-tr="İletişim" data-en="Contact">İletişim</label>
+                                <input type="email" class="form-input" id="contactEmail">
                             </div>
-                            <button type="submit" class="btn btn-primary">
-                                <span data-tr="Kayıt Ol" data-en="Register">Kayıt Ol</span>
+                            <div class="security-badges">
+                                <span class="security-badge">CE Belgeli</span>
+                                <span class="security-badge">ISO 13485</span>
+                                <span class="security-badge">TİTUBB Üyesi</span>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 16px;">
+                                <span data-tr="Profili Güncelle" data-en="Update Profile">Profili Güncelle</span>
                             </button>
                         </form>
+                        
+                        <div style="margin-top: 24px;">
+                            <h4 data-tr="Başarı Puanı" data-en="Success Rating">Başarı Puanı</h4>
+                            <div class="rating">
+                                <span class="star">★★★★☆</span>
+                                <span>4.2/5</span>
+                                <span class="badge badge-success">Güvenilir Tedarikçi</span>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="card">
@@ -925,26 +932,41 @@
         <!-- Requests Page -->
         <div id="requests" class="page">
             <div class="glass-card">
-                <h2 data-tr="Talepler ve Teklifler" data-en="Requests and Offers">Talepler ve Teklifler</h2>
-                <p data-tr="Tüm talep ve teklifleri görüntüleyin" data-en="View all requests and offers">Tüm talep ve teklifleri görüntüleyin</p>
+                <h2 data-tr="Tüm Talepler" data-en="All Requests">Tüm Talepler</h2>
+                <p data-tr="Platform üzerindeki tüm talepleri görüntüleyin" data-en="View all requests on the platform">Platform üzerindeki tüm talepleri görüntüleyin</p>
                 
-                <div class="grid grid-2" style="margin-top: 32px;">
-                    <div class="card">
-                        <h3 data-tr="Aktif Talepler" data-en="Active Requests">Aktif Talepler</h3>
-                        <div id="allRequests">
-                            <div class="loading">
-                                <span data-tr="Talepler yükleniyor..." data-en="Loading requests...">Talepler yükleniyor...</span>
-                            </div>
+                <div style="margin: 24px 0;">
+                    <div class="grid grid-3">
+                        <div class="form-group">
+                            <label class="form-label" data-tr="Kategori Filtresi" data-en="Category Filter">Kategori Filtresi</label>
+                            <select class="form-select" id="categoryFilter">
+                                <option value="">Tümü</option>
+                                <option value="medical-device">Tıbbi Cihaz</option>
+                                <option value="consumables">Sarf Malzeme</option>
+                                <option value="laboratory">Laboratuvar</option>
+                                <option value="veterinary">Veteriner</option>
+                                <option value="beauty">Güzellik</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-tr="Durum Filtresi" data-en="Status Filter">Durum Filtresi</label>
+                            <select class="form-select" id="statusFilter">
+                                <option value="">Tümü</option>
+                                <option value="open">Açık</option>
+                                <option value="closed">Kapalı</option>
+                                <option value="completed">Tamamlandı</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-tr="Arama" data-en="Search">Arama</label>
+                            <input type="text" class="form-input" id="searchInput" placeholder="Ürün adı ara...">
                         </div>
                     </div>
-                    
-                    <div class="card">
-                        <h3 data-tr="Son Teklifler" data-en="Recent Offers">Son Teklifler</h3>
-                        <div id="recentOffers">
-                            <div class="loading">
-                                <span data-tr="Teklifler yükleniyor..." data-en="Loading offers...">Teklifler yükleniyor...</span>
-                            </div>
-                        </div>
+                </div>
+                
+                <div id="allRequests">
+                    <div class="loading">
+                        <span data-tr="Talepler yükleniyor..." data-en="Loading requests...">Talepler yükleniyor...</span>
                     </div>
                 </div>
             </div>
@@ -1424,7 +1446,7 @@
             }
 
             loadPageData(page) {
-                switch (page) {
+                switch(page) {
                     case 'home':
                         this.updateStats();
                         break;
@@ -1432,11 +1454,10 @@
                         this.loadClinicRequests();
                         break;
                     case 'suppliers':
-                        this.loadOpenRequests();
+                        this.loadSupplierData();
                         break;
                     case 'requests':
                         this.loadAllRequests();
-                        this.loadRecentOffers();
                         break;
                     case 'veterinary':
                         this.loadVeterinaryRequests();
@@ -1458,248 +1479,180 @@
                 document.getElementById('totalRequests').textContent = requests.length;
                 document.getElementById('totalOffers').textContent = offers.length;
                 document.getElementById('activeSuppliers').textContent = suppliers.length;
-                document.getElementById('completedDeals').textContent = 
-                    requests.filter(r => r.status === 'completed').length;
+                document.getElementById('completedDeals').textContent = requests.filter(r => r.status === 'completed').length;
             }
 
             loadClinicRequests() {
                 const container = document.getElementById('clinicRequests');
-                const requests = this.dataManager.getRequests().filter(r => r.category !== 'veterinary' && r.category !== 'beauty');
+                const requests = this.dataManager.getRequests().filter(r => r.type === 'clinic');
                 
                 if (requests.length === 0) {
-                    container.innerHTML = '<p>Henüz talep bulunmuyor.</p>';
+                    container.innerHTML = '<p class="loading">Henüz talep oluşturulmamış</p>';
                     return;
                 }
 
                 container.innerHTML = requests.map(request => `
-                    <div class="card" style="margin-bottom: 16px;">
+                    <div class="card" style="margin-bottom: 12px;">
                         <h4>${request.productName}</h4>
-                        <p>Kategori: ${request.category}</p>
-                        <p>Miktar: ${request.quantity}</p>
-                        <p>Durum: <span class="badge badge-${request.status === 'open' ? 'success' : 'warning'}">${request.status}</span></p>
-                        <p>Tarih: ${new Date(request.createdAt).toLocaleDateString()}</p>
+                        <p><strong>Kategori:</strong> ${request.category}</p>
+                        <p><strong>Miktar:</strong> ${request.quantity}</p>
+                        <p><strong>Termin:</strong> ${new Date(request.deadline).toLocaleDateString('tr-TR')}</p>
+                        <span class="badge badge-${request.status === 'open' ? 'success' : 'primary'}">${request.status}</span>
                     </div>
                 `).join('');
             }
 
-            loadOpenRequests() {
+            loadSupplierData() {
                 const container = document.getElementById('openRequests');
-                const requests = this.dataManager.getRequests().filter(r => r.status === 'open');
+                const requests = app.dataManager.getRequests().filter(r => r.status === 'open');
                 
                 if (requests.length === 0) {
-                    container.innerHTML = '<p>Açık talep bulunmuyor.</p>';
+                    container.innerHTML = '<p class="loading">Açık talep bulunmuyor</p>';
                     return;
                 }
 
                 container.innerHTML = requests.map(request => `
-                    <div class="card" style="margin-bottom: 16px;">
+                    <div class="card" style="margin-bottom: 12px;">
                         <h4>${request.productName}</h4>
-                        <p>Kategori: ${request.category}</p>
-                        <p>Miktar: ${request.quantity}</p>
-                        <p>Tarih: ${new Date(request.createdAt).toLocaleDateString()}</p>
-                        <button class="btn btn-primary" onclick="window.app.createOffer('${request.id}')">
-                            Teklif Ver
-                        </button>
+                        <p><strong>Kategori:</strong> ${request.category}</p>
+                        <p><strong>Miktar:</strong> ${request.quantity}</p>
+                        <p><strong>Termin:</strong> ${new Date(request.deadline).toLocaleDateString('tr-TR')}</p>
+                        <button class="btn btn-success" onclick="app.createOffer('${request.id}')">Teklif Ver</button>
                     </div>
                 `).join('');
             }
 
             loadAllRequests() {
                 const container = document.getElementById('allRequests');
-                const requests = this.dataManager.getRequests();
+                const requests = app.dataManager.getRequests();
                 
                 if (requests.length === 0) {
-                    container.innerHTML = '<p>Talep bulunmuyor.</p>';
+                    container.innerHTML = '<p class="loading">Henüz talep bulunmuyor</p>';
                     return;
                 }
 
-                container.innerHTML = requests.slice(-5).map(request => `
-                    <div class="card" style="margin-bottom: 16px;">
-                        <h4>${request.productName}</h4>
-                        <p>Kategori: ${request.category}</p>
-                        <p>Miktar: ${request.quantity}</p>
-                        <p>Durum: <span class="badge badge-${request.status === 'open' ? 'success' : 'warning'}">${request.status}</span></p>
-                    </div>
-                `).join('');
-            }
-
-            loadRecentOffers() {
-                const container = document.getElementById('recentOffers');
-                const offers = this.dataManager.getOffers();
-                
-                if (offers.length === 0) {
-                    container.innerHTML = '<p>Teklif bulunmuyor.</p>';
-                    return;
-                }
-
-                container.innerHTML = offers.slice(-5).map(offer => `
-                    <div class="card" style="margin-bottom: 16px;">
-                        <h4>Teklif ID: ${offer.id}</h4>
-                        <p>Fiyat: ${offer.price} TL</p>
-                        <p>Garanti: ${offer.warranty} ay</p>
-                        <p>Tarih: ${new Date(offer.createdAt).toLocaleDateString()}</p>
+                container.innerHTML = requests.map(request => `
+                    <div class="card" style="margin-bottom: 12px;">
+                        <div class="card-header">
+                            <h4>${request.productName}</h4>
+                            <span class="badge badge-${request.status === 'open' ? 'success' : 'primary'}">${request.status}</span>
+                        </div>
+                        <p><strong>Tip:</strong> ${request.type || 'clinic'}</p>
+                        <p><strong>Kategori:</strong> ${request.category}</p>
+                        <p><strong>Miktar:</strong> ${request.quantity}</p>
+                        <p><strong>Termin:</strong> ${new Date(request.deadline).toLocaleDateString('tr-TR')}</p>
+                        ${request.description ? `<p><strong>Açıklama:</strong> ${request.description}</p>` : ''}
                     </div>
                 `).join('');
             }
 
             loadVeterinaryRequests() {
                 const container = document.getElementById('veterinaryRequests');
-                const requests = this.dataManager.getRequests().filter(r => r.type === 'veterinary');
+                const requests = app.dataManager.getRequests().filter(r => r.type === 'veterinary');
                 
                 if (requests.length === 0) {
-                    container.innerHTML = '<p>Veteriner talebi bulunmuyor.</p>';
+                    container.innerHTML = '<p class="loading">Henüz veteriner talebi oluşturulmamış</p>';
                     return;
                 }
 
                 container.innerHTML = requests.map(request => `
-                    <div class="card" style="margin-bottom: 16px;">
+                    <div class="card" style="margin-bottom: 12px;">
                         <h4>${request.productName}</h4>
-                        <p>Kategori: ${request.category}</p>
-                        <p>Hayvan: ${request.animalType}</p>
-                        <p>Miktar: ${request.quantity}</p>
-                        <p>Durum: <span class="badge badge-${request.status === 'open' ? 'success' : 'warning'}">${request.status}</span></p>
+                        <p><strong>Kategori:</strong> ${request.category}</p>
+                        <p><strong>Hayvan Türü:</strong> ${request.animalType}</p>
+                        <p><strong>Miktar:</strong> ${request.quantity}</p>
+                        <p><strong>Termin:</strong> ${new Date(request.deadline).toLocaleDateString('tr-TR')}</p>
+                        <span class="badge badge-${request.status === 'open' ? 'success' : 'primary'}">${request.status}</span>
                     </div>
                 `).join('');
             }
 
             loadBeautyRequests() {
                 const container = document.getElementById('beautyRequests');
-                const requests = this.dataManager.getRequests().filter(r => r.type === 'beauty');
+                const requests = app.dataManager.getRequests().filter(r => r.type === 'beauty');
                 
                 if (requests.length === 0) {
-                    container.innerHTML = '<p>Güzellik talebi bulunmuyor.</p>';
+                    container.innerHTML = '<p class="loading">Henüz güzellik talebi oluşturulmamış</p>';
                     return;
                 }
 
                 container.innerHTML = requests.map(request => `
-                    <div class="card" style="margin-bottom: 16px;">
+                    <div class="card" style="margin-bottom: 12px;">
                         <h4>${request.productName}</h4>
-                        <p>Kategori: ${request.category}</p>
-                        <p>Alan: ${request.applicationArea}</p>
-                        <p>Miktar: ${request.quantity}</p>
-                        <p>Durum: <span class="badge badge-${request.status === 'open' ? 'success' : 'warning'}">${request.status}</span></p>
+                        <p><strong>Kategori:</strong> ${request.category}</p>
+                        <p><strong>Uygulama Alanı:</strong> ${request.applicationArea}</p>
+                        <p><strong>Miktar:</strong> ${request.quantity}</p>
+                        <p><strong>Termin:</strong> ${new Date(request.deadline).toLocaleDateString('tr-TR')}</p>
+                        <span class="badge badge-${request.status === 'open' ? 'success' : 'primary'}">${request.status}</span>
                     </div>
                 `).join('');
             }
 
             loadAdminData() {
-                const requests = this.dataManager.getRequests();
-                const offers = this.dataManager.getOffers();
-                const suppliers = this.dataManager.getSuppliers();
+                const dataManager = app.dataManager;
+                const requests = dataManager.getRequests();
+                const offers = dataManager.getOffers();
+                const suppliers = dataManager.getSuppliers();
                 
+                // Update admin stats
                 document.getElementById('adminTotalRequests').textContent = requests.length;
                 document.getElementById('adminTotalOffers').textContent = offers.length;
-                document.getElementById('adminActiveUsers').textContent = suppliers.length + requests.length;
+                document.getElementById('adminActiveUsers').textContent = suppliers.length + Math.floor(requests.length / 2);
                 document.getElementById('adminCompletionRate').textContent = 
                     requests.length > 0 ? Math.round((requests.filter(r => r.status === 'completed').length / requests.length) * 100) + '%' : '0%';
-
+                
                 // Load transactions table
-                const tbody = document.getElementById('adminTransactions');
+                const transactionsContainer = document.getElementById('adminTransactions');
                 const allTransactions = [
-                    ...requests.map(r => ({...r, type: 'Talep'})),
-                    ...offers.map(o => ({...o, type: 'Teklif'}))
+                    ...requests.map(r => ({...r, transactionType: 'request'})),
+                    ...offers.map(o => ({...o, transactionType: 'offer'}))
                 ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
+                
                 if (allTransactions.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7">Veri bulunmuyor.</td></tr>';
+                    transactionsContainer.innerHTML = '<tr><td colspan="7" class="loading">Henüz işlem bulunmuyor</td></tr>';
                     return;
                 }
 
-                tbody.innerHTML = allTransactions.slice(0, 10).map(item => `
+                transactionsContainer.innerHTML = allTransactions.map(transaction => `
                     <tr>
-                        <td>${item.id}</td>
-                        <td>${item.type}</td>
-                        <td>${item.productName || 'N/A'}</td>
-                        <td>${item.category || 'N/A'}</td>
-                        <td><span class="badge badge-${item.status === 'open' ? 'success' : 'warning'}">${item.status || 'Active'}</span></td>
-                        <td>${new Date(item.createdAt).toLocaleDateString()}</td>
-                        <td><button class="btn btn-secondary" style="font-size: 12px; padding: 4px 8px;">Görüntüle</button></td>
+                        <td>${transaction.id}</td>
+                        <td>${transaction.transactionType === 'request' ? 'Talep' : 'Teklif'}</td>
+                        <td>${transaction.productName || transaction.requestId}</td>
+                        <td>${transaction.category || '-'}</td>
+                        <td><span class="badge badge-${transaction.status === 'open' ? 'success' : 'primary'}">${transaction.status || 'pending'}</span></td>
+                        <td>${new Date(transaction.createdAt).toLocaleDateString('tr-TR')}</td>
+                        <td>
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;">Detay</button>
+                        </td>
                     </tr>
                 `).join('');
             }
-
-            createOffer(requestId) {
-                const price = prompt('Teklif fiyatınızı girin (TL):');
-                const warranty = prompt('Garanti süresini girin (ay):');
-                
-                if (price && warranty) {
-                    const offer = {
-                        requestId: requestId,
-                        price: parseFloat(price),
-                        warranty: warranty,
-                        supplierId: 'current-supplier'
-                    };
-                    
-                    this.dataManager.saveOffer(offer);
-                    this.notificationManager.show('Teklifiniz başarıyla gönderildi!', 'success');
-                }
-            }
-
-            toggleTheme() {
-                const html = document.documentElement;
-                const themeToggle = document.getElementById('themeToggle');
-                
-                if (html.getAttribute('data-theme') === 'dark') {
-                    html.removeAttribute('data-theme');
-                    themeToggle.textContent = '🌙';
-                    localStorage.setItem('meditek-theme', 'light');
-                } else {
-                    html.setAttribute('data-theme', 'dark');
-                    themeToggle.textContent = '☀️';
-                    localStorage.setItem('meditek-theme', 'dark');
-                }
-            }
-
-            initTheme() {
-                const savedTheme = localStorage.getItem('meditek-theme');
-                const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                const theme = savedTheme || systemTheme;
-                
-                const html = document.documentElement;
-                const themeToggle = document.getElementById('themeToggle');
-                
-                if (theme === 'dark') {
-                    html.setAttribute('data-theme', 'dark');
-                    themeToggle.textContent = '☀️';
-                } else {
-                    html.removeAttribute('data-theme');
-                    themeToggle.textContent = '🌙';
-                }
-            }
         }
 
-        // Main Application
+        // Application Class
         class MeditekApp {
             constructor() {
                 this.dataManager = new DataManager();
                 this.notificationManager = new NotificationManager();
                 this.languageManager = new LanguageManager();
                 this.pageManager = new PageManager(this.dataManager);
+                
                 this.bindEvents();
+                this.init();
+            }
+
+            init() {
+                // Set minimum date for deadline inputs
+                const today = new Date().toISOString().split('T')[0];
+                document.querySelectorAll('input[type="date"]').forEach(input => {
+                    input.min = today;
+                });
+                
+                // Load initial data
+                this.pageManager.updateStats();
             }
 
             bindEvents() {
-                // Form submissions
-                document.getElementById('clinicRequestForm')?.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.handleClinicRequest(e);
-                });
-
-                document.getElementById('supplierRegistrationForm')?.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.handleSupplierRegistration(e);
-                });
-
-                document.getElementById('veterinaryRequestForm')?.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.handleVeterinaryRequest(e);
-                });
-
-                document.getElementById('beautyRequestForm')?.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.handleBeautyRequest(e);
-                });
-
                 // Language toggle
                 document.querySelectorAll('.lang-btn').forEach(btn => {
                     btn.addEventListener('click', () => {
@@ -1708,47 +1661,56 @@
                 });
 
                 // Theme toggle
-                document.getElementById('themeToggle')?.addEventListener('click', () => {
-                    this.pageManager.toggleTheme();
+                document.getElementById('themeToggle').addEventListener('click', () => {
+                    this.toggleTheme();
+                });
+
+                // Form submissions
+                document.getElementById('clinicRequestForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleClinicRequest(e.target);
+                });
+
+                document.getElementById('veterinaryRequestForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleVeterinaryRequest(e.target);
+                });
+
+                document.getElementById('beautyRequestForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleBeautyRequest(e.target);
+                });
+
+                document.getElementById('supplierProfileForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleSupplierProfile(e.target);
                 });
             }
 
-            handleClinicRequest(e) {
-                const formData = new FormData(e.target);
+            handleClinicRequest(form) {
+                const formData = new FormData(form);
                 const request = {
                     type: 'clinic',
-                    productName: document.getElementById('productName').value,
-                    category: document.getElementById('category').value,
-                    quantity: parseInt(document.getElementById('quantity').value),
-                    description: document.getElementById('description').value,
-                    deadline: document.getElementById('deadline').value
+                    productName: formData.get('productName') || document.getElementById('productName').value,
+                    category: formData.get('category') || document.getElementById('category').value,
+                    quantity: formData.get('quantity') || document.getElementById('quantity').value,
+                    description: formData.get('description') || document.getElementById('description').value,
+                    deadline: formData.get('deadline') || document.getElementById('deadline').value
                 };
 
                 this.dataManager.saveRequest(request);
-                this.notificationManager.show('Talep başarıyla oluşturuldu!', 'success');
-                e.target.reset();
+                this.notificationManager.show('Klinik talebi başarıyla oluşturuldu!', 'success');
+                form.reset();
                 this.pageManager.loadClinicRequests();
+                this.pageManager.updateStats();
             }
 
-            handleSupplierRegistration(e) {
-                const supplier = {
-                    companyName: document.getElementById('companyName').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value,
-                    specialties: Array.from(document.getElementById('specialties').selectedOptions).map(o => o.value)
-                };
-
-                this.dataManager.saveSupplier(supplier);
-                this.notificationManager.show('Tedarikçi kaydı başarıyla tamamlandı!', 'success');
-                e.target.reset();
-            }
-
-            handleVeterinaryRequest(e) {
+            handleVeterinaryRequest(form) {
                 const request = {
                     type: 'veterinary',
                     productName: document.getElementById('vetProductName').value,
                     category: document.getElementById('vetCategory').value,
-                    quantity: parseInt(document.getElementById('vetQuantity').value),
+                    quantity: document.getElementById('vetQuantity').value,
                     animalType: document.getElementById('animalType').value,
                     description: document.getElementById('vetDescription').value,
                     deadline: document.getElementById('vetDeadline').value
@@ -1756,16 +1718,17 @@
 
                 this.dataManager.saveRequest(request);
                 this.notificationManager.show('Veteriner talebi başarıyla oluşturuldu!', 'success');
-                e.target.reset();
+                form.reset();
                 this.pageManager.loadVeterinaryRequests();
+                this.pageManager.updateStats();
             }
 
-            handleBeautyRequest(e) {
+            handleBeautyRequest(form) {
                 const request = {
                     type: 'beauty',
                     productName: document.getElementById('beautyProductName').value,
                     category: document.getElementById('beautyCategory').value,
-                    quantity: parseInt(document.getElementById('beautyQuantity').value),
+                    quantity: document.getElementById('beautyQuantity').value,
                     applicationArea: document.getElementById('applicationArea').value,
                     description: document.getElementById('beautyDescription').value,
                     deadline: document.getElementById('beautyDeadline').value
@@ -1773,8 +1736,21 @@
 
                 this.dataManager.saveRequest(request);
                 this.notificationManager.show('Güzellik talebi başarıyla oluşturuldu!', 'success');
-                e.target.reset();
+                form.reset();
                 this.pageManager.loadBeautyRequests();
+                this.pageManager.updateStats();
+            }
+
+            handleSupplierProfile(form) {
+                const supplier = {
+                    companyName: document.getElementById('companyName').value,
+                    taxNumber: document.getElementById('taxNumber').value,
+                    mersisNumber: document.getElementById('mersisNumber').value,
+                    email: document.getElementById('contactEmail').value
+                };
+
+                this.dataManager.saveSupplier(supplier);
+                this.notificationManager.show('Tedarikçi profili güncellendi!', 'success');
             }
 
             createOffer(requestId) {
