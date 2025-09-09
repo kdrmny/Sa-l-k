@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meditek - Sağlık Tedarik Platformu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #000000;
+            --secondary: #333333;
+            --background: #ffffff;
+            --glass: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --success: #000000;
+            --warning: #000000;
+            --error: #000000;
+            --light-gray: #f7f7f7;
+            --border: #e0e0e0;
+            --soft-accent: #f0f0f0;
+        }
+
+        [data-theme="dark"] {
+            --primary: #e0e0e0;
+            --secondary: #b0b0b0;
+            --background: #1a1a1a;
+            --glass: rgba(30, 30, 30, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --success: #e0e0e0;
+            --warning: #e0e0e0;
+            --error: #e0e0e0;
+            --light-gray: #2a2a2a;
+            --border: #404040;
+            --soft-accent: #333333;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: 
+                linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)),
+                radial-gradient(circle at 20% 80%, rgba(100, 100, 130, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(130, 100, 110, 0.08), transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(100, 130, 140, 0.06), transparent 50%),
+                var(--background);
+            color: var(--primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] body {
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                radial-gradient(circle at 20% 80%, rgba(40, 40, 60, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(60, 40, 50, 0.08), transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(40, 60, 70, 0.06), transparent 50%),
+                var(--background);
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px) saturate(0.9) contrast(1.05);
+            -webkit-backdrop-filter: blur(20px) saturate(0.9) contrast(1.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            padding: 12px 24px;
+            z-index: 1000;
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            width: 95%;
+            max-width: 1200px;
+        }
+
+        [data-theme="dark"] .navbar {
+            background: rgba(26, 26, 26, 0.85);
+            backdrop-filter: blur(20px) saturate(0.95) contrast(1.05);
+            -webkit-backdrop-filter: blur(20px) saturate(0.95) contrast(1.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .nav-link {
+            padding: 8px 16px;
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--soft-accent);
+            color: var(--primary);
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--soft-accent);
+        }
+
+        .lang-toggle {
+            display: flex;
+            background: var(--soft-accent);
+            border-radius: 20px;
+            padding: 4px;
+        }
+
+        .lang-btn {
+            padding: 6px 12px;
+            border: none;
+            background: none;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 20px 40px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.68);
+            backdrop-filter: blur(20px) saturate(0.85) contrast(1.08);
+            -webkit-backdrop-filter: blur(20px) saturate(0.85) contrast(1.08);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        }
+
+        [data-theme="dark"] .glass-card {
+            background: rgba(26, 26, 26, 0.75);
+            backdrop-filter: blur(20px) saturate(0.9) contrast(1.08);
+            -webkit-backdrop-filter: blur(20px) saturate(0.9) contrast(1.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        [data-theme="dark"] .hero h1 {
+            background: linear-gradient(135deg, #ffffff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--secondary);
+            margin-bottom: 32px;
+        }
+
+        .pilot-notice {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 32px;
+            text-align: center;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: var(--background);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary);
+            color: var(--background);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--soft-accent);
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            font-size: 16px;
+            background: var(--background);
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--soft-accent);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(10px) saturate(0.88);
+            -webkit-backdrop-filter: blur(10px) saturate(0.88);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 0.85);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        [data-theme="dark"] .card {
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(10px) saturate(0.92);
+            -webkit-backdrop-filter: blur(10px) saturate(0.92);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        [data-theme="dark"] .card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        [data-theme="dark"] .card-title {
+            color: #ffffff;
+        }
+
+        .card-subtitle {
+            color: var(--secondary);
+            font-size: 14px;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-primary {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--primary);
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--secondary);
+            font-size: 14px;
+        }
+
+        /* Rating */
+        .rating {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .star {
+            color: #FCD34D;
+            font-size: 16px;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px) saturate(0.9);
+            -webkit-backdrop-filter: blur(20px) saturate(0.9);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 16px;
+            padding: 16px 24px;
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.85);
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .notification {
+            background: rgba(26, 26, 26, 0.9);
+            backdrop-filter: blur(20px) saturate(0.95);
+            -webkit-backdrop-filter: blur(20px) saturate(0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--error);
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--background);
+        }
+
+        .table th, .table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table th {
+            background: var(--light-gray);
+            font-weight: 600;
+        }
+
+        .table tr:hover {
+            background: var(--light-gray);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                width: 95%;
+                padding: 12px 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-controls {
+                gap: 8px;
+            }
+
+            .theme-toggle {
+                padding: 6px;
+                font-size: 14px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            .container {
+                padding: 100px 16px 40px;
+            }
+
+            .glass-card {
+                padding: 24px;
+            }
+
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Category selection */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 32px;
+        }
+
+        .category-card {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(10px) saturate(0.85);
+            -webkit-backdrop-filter: blur(10px) saturate(0.85);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 0.75);
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover {
+            border-color: rgba(0, 0, 0, 0.12);
+            transform: translateY(-6px);
+            box-shadow: 
+                0 12px 32px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        }
+
+        [data-theme="dark"] .category-card {
+            background: rgba(32, 32, 32, 0.75);
+            backdrop-filter: blur(10px) saturate(0.9);
+            -webkit-backdrop-filter: blur(10px) saturate(0.9);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        [data-theme="dark"] .category-card:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 
+                0 12px 32px rgba(0, 0, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        .category-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .category-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        [data-theme="dark"] .category-title {
+            color: #ffffff;
+        }
+
+        .category-description {
+            color: var(--secondary);
+            font-size: 14px;
+        }
+
+        /* Benchmark warning */
+        .benchmark-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-top: 12px;
+            font-size: 14px;
+            color: var(--warning);
+        }
+
+        /* Security badges */
+        .security-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .security-badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Progress indicator */
+        .progress {
+            width: 100%;
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--success);
+            transition: width 0.3s ease;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid var(--light-gray);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">Meditek</div>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link active" data-page="home">Ana Sayfa</a></li>
+                <li><a href="#" class="nav-link" data-page="clinics">Klinikler</a></li>
+                <li><a href="#" class="nav-link" data-page="suppliers">Tedarikçiler</a></li>
+                <li><a href="#" class="nav-link" data-page="requests">Talepler</a></li>
+                <li><a href="#" class="nav-link" data-page="veterinary">Veteriner</a></li>
+                <li><a href="#" class="nav-link" data-page="beauty">Güzellik</a></li>
+                <li><a href="#" class="nav-link" data-page="admin">Admin</a></li>
+                <li><a href="#" class="nav-link" data-page="demo">Demo</a></li>
+            </ul>
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle">🌙</button>
+                <div class="lang-toggle">
+                    <button class="lang-btn active" data-lang="tr">TR</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <div class="hero">
+                <h1 data-tr="Sağlık Tedarik Platformu" data-en="Healthcare Supply Platform">Sağlık Tedarik Platformu</h1>
+                <p data-tr="Klinikler ve tedarikçiler arasında güvenli, şeffaf ve verimli ticaret" data-en="Secure, transparent and efficient trade between clinics and suppliers">Klinikler ve tedarikçiler arasında güvenli, şeffaf ve verimli ticaret</p>
+                
+                <div class="pilot-notice">
+                    <span data-tr="🎯 Pilot ücretsizdir – güvenli ve şeffaf deneme fırsatı" data-en="🎯 Pilot is free – secure and transparent trial opportunity">🎯 Pilot ücretsizdir – güvenli ve şeffaf deneme fırsatı</span>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <h2 data-tr="Kategoriler" data-en="Categories">Kategoriler</h2>
+                <div class="category-grid">
+                    <div class="category-card" onclick="navigateToPage('clinics')">
+                        <div class="category-icon">🏥</div>
+                        <div class="category-title" data-tr="Klinikler & Hastaneler" data-en="Clinics & Hospitals">Klinikler & Hastaneler</div>
+                        <div class="category-description" data-tr="Tıbbi malzeme ve ekipman talepleri" data-en="Medical supplies and equipment requests">Tıbbi malzeme ve ekipman talepleri</div>
+                    </div>
+                    <div class="category-card" onclick="navigateToPage('suppliers')">
+                        <div class="category-icon">🏭</div>
+                        <div class="category-title" data-tr="Tedarikçiler" data-en="Suppliers">Tedarikçiler</div>
+                        <div class="category-description" data-tr="Teklif verin ve işlerinizi büyütün" data-en="Submit offers and grow your business">Teklif verin ve işlerinizi büyütün</div>
+                    </div>
+                    <div class="category-card" onclick="navigateToPage('veterinary')">
+                        <div class="category-icon">🐕</div>
+                        <div class="category-title" data-tr="Veteriner Klinikleri" data-en="Veterinary Clinics">Veteriner Klinikleri</div>
+                        <div class="category-description" data-tr="Veteriner malzeme ve ekipmanlar" data-en="Veterinary supplies and equipment">Veteriner malzeme ve ekipmanlar</div>
+                    </div>
+                    <div class="category-card" onclick="navigateToPage('beauty')">
+                        <div class="category-icon">💄</div>
+                        <div class="category-title" data-tr="Güzellik & Epilasyon" data-en="Beauty & Epilation">Güzellik & Epilasyon</div>
+                        <div class="category-description" data-tr="Estetik ve güzellik merkezi ihtiyaçları" data-en="Aesthetic and beauty center needs">Estetik ve güzellik merkezi ihtiyaçları</div>
+                    </div>
+                    <div class="category-card" onclick="navigateToPage('demo')">
+                        <div class="category-icon">🎮</div>
+                        <div class="category-title" data-tr="Demo" data-en="Demo">Demo</div>
+                        <div class="category-description" data-tr="Örnek talepler ve teklifler" data-en="Sample requests and offers">Örnek talepler ve teklifler</div>
+                    </div>
+                    <div class="category-card" onclick="navigateToPage('admin')">
+                        <div class="category-icon">⚙️</div>
+                        <div class="category-title" data-tr="Admin Paneli" data-en="Admin Panel">Admin Paneli</div>
+                        <div class="category-description" data-tr="Platform yönetimi ve istatistikler" data-en="Platform management and statistics">Platform yönetimi ve istatistikler</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalRequests">0</div>
+                    <div class="stat-label" data-tr="Toplam Talep" data-en="Total Requests">Toplam Talep</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalOffers">0</div>
+                    <div class="stat-label" data-tr="Toplam Teklif" data-en="Total Offers">Toplam Teklif</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="activeSuppliers">0</div>
+                    <div class="stat-label" data-tr="Aktif Tedarikçi" data-en="Active Suppliers">Aktif Tedarikçi</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedDeals">0</div>
+                    <div class="stat-label" data-tr="Tamamlanan İşlem" data-en="Completed Deals">Tamamlanan İşlem</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clinics Page -->
+        <div id="clinics" class="page">
+            <div class="glass-card">
+                <h2 data-tr="Klinik & Hastane Paneli" data-en="Clinic & Hospital Panel">Klinik & Hastane Paneli</h2>
+                <p data-tr="Tıbbi malzeme ve ekipman taleplerinizi oluşturun" data-en="Create your medical supply and equipment requests">Tıbbi malzeme ve ekipman taleplerinizi oluşturun</p>
+                
+                <div class="grid grid-2" style="margin-top: 32px;">
+                    <div class="card">
+                        <h3 data-tr="Yeni Talep Oluştur" data-en="Create New Request">Yeni Talep Oluştur</h3>
+                        <form id="clinicRequestForm">
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Ürün Adı" data-en="Product Name">Ürün Adı</label>
+                                <input type="text" class="form-input" id="productName" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Kategori" data-en="Category">Kategori</label>
+                                <select class="form-select" id="category" required>
+                                    <option value="">Seçiniz</option>
+                                    <option value="medical-device">Tıbbi Cihaz</option>
+                                    <option value="consumables">Sarf Malzeme</option>
+                                    <option value="laboratory">Laboratuvar</option>
+                                    <option value="imaging">Görüntüleme</option>
+                                    <option value="emergency">Acil Müdahale</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Miktar" data-en="Quantity">Miktar</label>
+                                <input type="number" class="form-input" id="quantity" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Açıklama" data-en="Description">Açıklama</label>
+                                <textarea class="form-textarea" id="description"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Termin Tarihi" data-en="Deadline">Termin Tarihi</label>
+                                <input type="date" class="form-input" id="deadline" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <span data-tr="Talep Oluştur" data-en="Create Request">Talep Oluştur</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 data-tr="Aktif Taleplerim" data-en="My Active Requests">Aktif Taleplerim</h3>
+                        <div id="clinicRequests">
+                            <div class="loading">
+                                <span data-tr="Talepler yükleniyor..." data-en="Loading requests...">Talepler yükleniyor...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suppliers Page -->
+        <div id="suppliers" class="page">
+            <div class="glass-card">
+                <h2 data-tr="Tedarikçi Paneli" data-en="Supplier Panel">Tedarikçi Paneli</h2>
+                <p data-tr="Mevcut talepleri görüntüleyin ve teklif verin" data-en="View available requests and submit offers">Mevcut talepleri görüntüleyin ve teklif verin</p>
+                
+                <div class="grid grid-2" style="margin-top: 32px;">
+                    <div class="card">
+                        <h3 data-tr="Tedarikçi Kaydı" data-en="Supplier Registration">Tedarikçi Kaydı</h3>
+                        <form id="supplierRegistrationForm">
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Şirket Adı" data-en="Company Name">Şirket Adı</label>
+                                <input type="text" class="form-input" id="companyName" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="E-posta" data-en="Email">E-posta</label>
+                                <input type="email" class="form-input" id="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Telefon" data-en="Phone">Telefon</label>
+                                <input type="tel" class="form-input" id="phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Uzmanlık Alanları" data-en="Specialties">Uzmanlık Alanları</label>
+                                <select class="form-select" id="specialties" multiple>
+                                    <option value="medical-device">Tıbbi Cihaz</option>
+                                    <option value="consumables">Sarf Malzeme</option>
+                                    <option value="laboratory">Laboratuvar</option>
+                                    <option value="imaging">Görüntüleme</option>
+                                    <option value="veterinary">Veteriner</option>
+                                    <option value="beauty">Güzellik</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <span data-tr="Kayıt Ol" data-en="Register">Kayıt Ol</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 data-tr="Açık Talepler" data-en="Open Requests">Açık Talepler</h3>
+                        <div id="openRequests">
+                            <div class="loading">
+                                <span data-tr="Talepler yükleniyor..." data-en="Loading requests...">Talepler yükleniyor...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Requests Page -->
+        <div id="requests" class="page">
+            <div class="glass-card">
+                <h2 data-tr="Talepler ve Teklifler" data-en="Requests and Offers">Talepler ve Teklifler</h2>
+                <p data-tr="Tüm talep ve teklifleri görüntüleyin" data-en="View all requests and offers">Tüm talep ve teklifleri görüntüleyin</p>
+                
+                <div class="grid grid-2" style="margin-top: 32px;">
+                    <div class="card">
+                        <h3 data-tr="Aktif Talepler" data-en="Active Requests">Aktif Talepler</h3>
+                        <div id="allRequests">
+                            <div class="loading">
+                                <span data-tr="Talepler yükleniyor..." data-en="Loading requests...">Talepler yükleniyor...</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 data-tr="Son Teklifler" data-en="Recent Offers">Son Teklifler</h3>
+                        <div id="recentOffers">
+                            <div class="loading">
+                                <span data-tr="Teklifler yükleniyor..." data-en="Loading offers...">Teklifler yükleniyor...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Veterinary Page -->
+        <div id="veterinary" class="page">
+            <div class="glass-card">
+                <h2 data-tr="Veteriner Klinik Paneli" data-en="Veterinary Clinic Panel">Veteriner Klinik Paneli</h2>
+                <p data-tr="Veteriner malzeme ve ekipman taleplerinizi oluşturun" data-en="Create your veterinary supply and equipment requests">Veteriner malzeme ve ekipman taleplerinizi oluşturun</p>
+                
+                <div class="grid grid-2" style="margin-top: 32px;">
+                    <div class="card">
+                        <h3 data-tr="Yeni Veteriner Talebi" data-en="New Veterinary Request">Yeni Veteriner Talebi</h3>
+                        <form id="veterinaryRequestForm">
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Ürün Adı" data-en="Product Name">Ürün Adı</label>
+                                <input type="text" class="form-input" id="vetProductName" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Kategori" data-en="Category">Kategori</label>
+                                <select class="form-select" id="vetCategory" required>
+                                    <option value="">Seçiniz</option>
+                                    <option value="surgery">Cerrahi Ekipman</option>
+                                    <option value="diagnosis">Tanı Ekipmanları</option>
+                                    <option value="medication">İlaç ve Aşı</option>
+                                    <option value="nutrition">Beslenme</option>
+                                    <option value="care">Bakım Ürünleri</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Miktar" data-en="Quantity">Miktar</label>
+                                <input type="number" class="form-input" id="vetQuantity" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Hayvan Türü" data-en="Animal Type">Hayvan Türü</label>
+                                <select class="form-select" id="animalType">
+                                    <option value="">Seçiniz</option>
+                                    <option value="dog">Köpek</option>
+                                    <option value="cat">Kedi</option>
+                                    <option value="bird">Kuş</option>
+                                    <option value="exotic">Egzotik Hayvan</option>
+                                    <option value="farm">Çiftlik Hayvanları</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Açıklama" data-en="Description">Açıklama</label>
+                                <textarea class="form-textarea" id="vetDescription"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Termin Tarihi" data-en="Deadline">Termin Tarihi</label>
+                                <input type="date" class="form-input" id="vetDeadline" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <span data-tr="Veteriner Talebi Oluştur" data-en="Create Veterinary Request">Veteriner Talebi Oluştur</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 data-tr="Veteriner Taleplerım" data-en="My Veterinary Requests">Veteriner Taleplerım</h3>
+                        <div id="veterinaryRequests">
+                            <div class="loading">
+                                <span data-tr="Talepler yükleniyor..." data-en="Loading requests...">Talepler yükleniyor...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Beauty Page -->
+        <div id="beauty" class="page">
+            <div class="glass-card">
+                <h2 data-tr="Güzellik & Epilasyon Merkezi Paneli" data-en="Beauty & Epilation Center Panel">Güzellik & Epilasyon Merkezi Paneli</h2>
+                <p data-tr="Estetik ve güzellik merkezi ihtiyaçlarınızı talep edin" data-en="Request your aesthetic and beauty center needs">Estetik ve güzellik merkezi ihtiyaçlarınızı talep edin</p>
+                
+                <div class="grid grid-2" style="margin-top: 32px;">
+                    <div class="card">
+                        <h3 data-tr="Yeni Güzellik Talebi" data-en="New Beauty Request">Yeni Güzellik Talebi</h3>
+                        <form id="beautyRequestForm">
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Ürün Adı" data-en="Product Name">Ürün Adı</label>
+                                <input type="text" class="form-input" id="beautyProductName" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Kategori" data-en="Category">Kategori</label>
+                                <select class="form-select" id="beautyCategory" required>
+                                    <option value="">Seçiniz</option>
+                                    <option value="laser">Lazer Ekipmanları</option>
+                                    <option value="skincare">Cilt Bakım Ürünleri</option>
+                                    <option value="consumables">Sarf Malzemeler</option>
+                                    <option value="equipment">Estetik Cihazlar</option>
+                                    <option value="accessories">Aksesuarlar</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Miktar" data-en="Quantity">Miktar</label>
+                                <input type="number" class="form-input" id="beautyQuantity" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Uygulama Alanı" data-en="Application Area">Uygulama Alanı</label>
+                                <select class="form-select" id="applicationArea">
+                                    <option value="">Seçiniz</option>
+                                    <option value="face">Yüz</option>
+                                    <option value="body">Vücut</option>
+                                    <option value="hair">Saç</option>
+                                    <option value="nail">Tırnak</option>
+                                    <option value="general">Genel</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Açıklama" data-en="Description">Açıklama</label>
+                                <textarea class="form-textarea" id="beautyDescription"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-tr="Termin Tarihi" data-en="Deadline">Termin Tarihi</label>
+                                <input type="date" class="form-input" id="beautyDeadline" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <span data-tr="Güzellik Talebi Oluştur" data-en="Create Beauty Request">Güzellik Talebi Oluştur</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 data-tr="Güzellik Taleplerım" data-en="My Beauty Requests">Güzellik Taleplerım</h3>
+                        <div id="beautyRequests">
+                            <div class="loading">
+                                <span data-tr="Talepler yükleniyor..." data-en="Loading requests...">Talepler yükleniyor...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Page -->
+        <div id="admin" class="page">
+            <div class="glass-card">
+                <h2 data-tr="Admin Paneli" data-en="Admin Panel">Admin Paneli</h2>
+                <p data-tr="Platform istatistikleri ve yönetim" data-en="Platform statistics and management">Platform istatistikleri ve yönetim</p>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="adminTotalRequests">0</div>
+                        <div class="stat-label" data-tr="Toplam Talep" data-en="Total Requests">Toplam Talep</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="adminTotalOffers">0</div>
+                        <div class="stat-label" data-tr="Toplam Teklif" data-en="Total Offers">Toplam Teklif</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="adminActiveUsers">0</div>
+                        <div class="stat-label" data-tr="Aktif Kullanıcı" data-en="Active Users">Aktif Kullanıcı</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="adminCompletionRate">0%</div>
+                        <div class="stat-label" data-tr="Tamamlanma Oranı" data-en="Completion Rate">Tamamlanma Oranı</div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-2" style="margin-top: 32px;">
+                    <div class="card">
+                        <h3 data-tr="Son 7 Günlük Aktivite" data-en="Last 7 Days Activity">Son 7 Günlük Aktivite</h3>
+                        <canvas id="activityChart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 data-tr="Kategori Dağılımı" data-en="Category Distribution">Kategori Dağılımı</h3>
+                        <canvas id="categoryChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+                
+                <div class="glass-card" style="margin-top: 24px;">
+                    <h3 data-tr="Tüm İşlemler" data-en="All Transactions">Tüm İşlemler</h3>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th data-tr="ID" data-en="ID">ID</th>
+                                    <th data-tr="Tür" data-en="Type">Tür</th>
+                                    <th data-tr="Ürün" data-en="Product">Ürün</th>
+                                    <th data-tr="Kategori" data-en="Category">Kategori</th>
+                                    <th data-tr="Durum" data-en="Status">Durum</th>
+                                    <th data-tr="Tarih" data-en="Date">Tarih</th>
+                                    <th data-tr="İşlemler" data-en="Actions">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminTransactions">
+                                <tr>
+                                    <td colspan="7" class="loading">
+                                        <span data-tr="Veriler yükleniyor..." data-en="Loading data...">Veriler yükleniyor...</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo Page -->
+        <div id="demo" class="page">
+            <div class="glass-card">
+                <h2 data-tr="Demo - Örnek Talepler ve Teklifler" data-en="Demo - Sample Requests and Offers">Demo - Örnek Talepler ve Teklifler</h2>
+                <p data-tr="Platformun nasıl çalıştığını görmek için örnek veriler" data-en="Sample data to see how the platform works">Platformun nasıl çalıştığını görmek için örnek veriler</p>
+                
+                <div class="pilot-notice">
+                    <span data-tr="⚠️ Bu demo verileridir - gerçek işlemler değildir" data-en="⚠️ This is demo data - not real transactions">⚠️ Bu demo verileridir - gerçek işlemler değildir</span>
+                </div>
+                
+                <div class="grid grid-3" style="margin-top: 32px;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 data-tr="Ultrason Cihazı Talebi" data-en="Ultrasound Device Request">Ultrason Cihazı Talebi</h4>
+                            <span class="badge badge-success" data-tr="Açık" data-en="Open">Açık</span>
+                        </div>
+                        <p><strong data-tr="Klinik:" data-en="Clinic:">Klinik:</strong> Ankara Özel Hastanesi</p>
+                        <p><strong data-tr="Miktar:" data-en="Quantity:">Miktar:</strong> 1 adet</p>
+                        <p><strong data-tr="Termin:" data-en="Deadline:">Termin:</strong> 15 gün</p>
+                        <div class="benchmark-warning">
+                            💡 Ultrason cihazları genellikle 150.000-500.000 TL arasında işlem görüyor
+                        </div>
+                        <h5 style="margin-top: 16px;" data-tr="Gelen Teklifler:" data-en="Received Offers:">Gelen Teklifler:</h5>
+                        <div style="border-left: 3px solid var(--success); padding-left: 12px; margin-top: 8px;">
+                            <strong>MediTech Solutions</strong><br>
+                            <span class="rating">★★★★★ 4.8/5</span><br>
+                            Fiyat: 285.000 TL<br>
+                            Garanti: 2 yıl<br>
+                            <div class="security-badges">
+                                <span class="security-badge">CE</span>
+                                <span class="security-badge">ISO</span>
+                            </div>
+                        </div>
+                        <div style="border-left: 3px solid var(--warning); padding-left: 12px; margin-top: 8px;">
+                            <strong>SağlıkTek A.Ş.</strong><br>
+                            <span class="rating">★★★★☆ 4.2/5</span><br>
+                            Fiyat: 310.000 TL<br>
+                            Garanti: 3 yıl<br>
+                            <div class="security-badges">
+                                <span class="security-badge">CE</span>
+                                <span class="security-badge">TİTUBB</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-success" style="margin-top: 16px;">
+                            <span data-tr="En Uygun Teklif Seçildi ✅" data-en="Best Offer Selected ✅">En Uygun Teklif Seçildi ✅</span>
+                        </button>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 data-tr="Kan Sayım Kiti" data-en="Blood Count Kit">Kan Sayım Kiti</h4>
+                            <span class="badge badge-warning" data-tr="Bekliyor" data-en="Pending">Bekliyor</span>
+                        </div>
+                        <p><strong data-tr="Veteriner:" data-en="Veterinary:">Veteriner:</strong> İzmir Pet Clinic</p>
+                        <p><strong data-tr="Miktar:" data-en="Quantity:">Miktar:</strong> 50 adet</p>
+                        <p><strong data-tr="Hayvan:" data-en="Animal:">Hayvan:</strong> Köpek & Kedi</p>
+                        <div class="benchmark-warning">
+                            💡 Veteriner kan kitleri genellikle 25-80 TL/adet arasında
+                        </div>
+                        <h5 style="margin-top: 16px;" data-tr="Gelen Teklifler:" data-en="Received Offers:">Gelen Teklifler:</h5>
+                        <div style="border-left: 3px solid var(--primary); padding-left: 12px; margin-top: 8px;">
+                            <strong>VetSupply Pro</strong><br>
+                            <span class="rating">★★★★☆ 4.5/5</span><br>
+                            Fiyat: 45 TL/adet<br>
+                            Toplam: 2.250 TL<br>
+                            <div class="security-badges">
+                                <span class="security-badge">CE</span>
+                            </div>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 65%;"></div>
+                        </div>
+                        <small data-tr="Karar verme süresi: 2 gün kaldı" data-en="Decision time: 2 days left">Karar verme süresi: 2 gün kaldı</small>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 data-tr="Lazer Başlık Sarf" data-en="Laser Head Consumable">Lazer Başlık Sarf</h4>
+                            <span class="badge badge-primary" data-tr="Tamamlandı" data-en="Completed">Tamamlandı</span>
+                        </div>
+                        <p><strong data-tr="Güzellik:" data-en="Beauty:">Güzellik:</strong> Estetik Plus Merkezi</p>
+                        <p><strong data-tr="Miktar:" data-en="Quantity:">Miktar:</strong> 10 adet</p>
+                        <p><strong data-tr="Alan:" data-en="Area:">Alan:</strong> Yüz epilasyonu</p>
+                        <div class="benchmark-warning">
+                            💡 Lazer başlıkları genellikle 500-1500 TL/adet arasında
+                        </div>
+                        <h5 style="margin-top: 16px;" data-tr="Kazanan Teklif:" data-en="Winning Offer:">Kazanan Teklif:</h5>
+                        <div style="border-left: 3px solid var(--success); padding-left: 12px; margin-top: 8px;">
+                            <strong>BeautyTech International</strong><br>
+                            <span class="rating">★★★★★ 4.9/5</span><br>
+                            Fiyat: 850 TL/adet<br>
+                            Toplam: 8.500 TL<br>
+                            <div class="security-badges">
+                                <span class="security-badge">CE</span>
+                                <span class="security-badge">FDA</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 16px;">
+                            <span class="badge badge-success" data-tr="Teslim Edildi" data-en="Delivered">Teslim Edildi</span>
+                            <div style="margin-top: 8px;">
+                                <small data-tr="Müşteri Puanı:" data-en="Customer Rating:">Müşteri Puanı:</small>
+                                <span class="rating">★★★★★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats" style="margin-top: 32px;">
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label" data-tr="Demo Talep" data-en="Demo Requests">Demo Talep</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label" data-tr="Demo Teklif" data-en="Demo Offers">Demo Teklif</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label" data-tr="Demo Tedarikçi" data-en="Demo Suppliers">Demo Tedarikçi</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label" data-tr="Tamamlanan" data-en="Completed">Tamamlanan</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification" class="notification">
+        <div id="notificationContent"></div>
+    </div>
+
+    <script>
+        // Data Storage
+        class DataManager {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                if (!localStorage.getItem('meditek-requests')) {
+                    localStorage.setItem('meditek-requests', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('meditek-offers')) {
+                    localStorage.setItem('meditek-offers', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('meditek-suppliers')) {
+                    localStorage.setItem('meditek-suppliers', JSON.stringify([]));
+                }
+            }
+
+            getRequests() {
+                return JSON.parse(localStorage.getItem('meditek-requests') || '[]');
+            }
+
+            saveRequest(request) {
+                const requests = this.getRequests();
+                request.id = Date.now().toString();
+                request.createdAt = new Date().toISOString();
+                request.status = 'open';
+                requests.push(request);
+                localStorage.setItem('meditek-requests', JSON.stringify(requests));
+                return request;
+            }
+
+            getOffers() {
+                return JSON.parse(localStorage.getItem('meditek-offers') || '[]');
+            }
+
+            saveOffer(offer) {
+                const offers = this.getOffers();
+                offer.id = Date.now().toString();
+                offer.createdAt = new Date().toISOString();
+                offers.push(offer);
+                localStorage.setItem('meditek-offers', JSON.stringify(offers));
+                return offer;
+            }
+
+            getSuppliers() {
+                return JSON.parse(localStorage.getItem('meditek-suppliers') || '[]');
+            }
+
+            saveSupplier(supplier) {
+                const suppliers = this.getSuppliers();
+                const existingIndex = suppliers.findIndex(s => s.email === supplier.email);
+                if (existingIndex !== -1) {
+                    suppliers[existingIndex] = { ...suppliers[existingIndex], ...supplier };
+                } else {
+                    supplier.id = Date.now().toString();
+                    supplier.createdAt = new Date().toISOString();
+                    suppliers.push(supplier);
+                }
+                localStorage.setItem('meditek-suppliers', JSON.stringify(suppliers));
+                return supplier;
+            }
+        }
+
+        // Notification System
+        class NotificationManager {
+            show(message, type = 'success') {
+                const notification = document.getElementById('notification');
+                const content = document.getElementById('notificationContent');
+                
+                content.textContent = message;
+                notification.className = `notification ${type}`;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // Language Manager
+        class LanguageManager {
+            constructor() {
+                this.currentLang = localStorage.getItem('meditek-lang') || 'tr';
+                this.updateLanguage();
+            }
+
+            setLanguage(lang) {
+                this.currentLang = lang;
+                localStorage.setItem('meditek-lang', lang);
+                this.updateLanguage();
+            }
+
+            updateLanguage() {
+                const elements = document.querySelectorAll('[data-tr]');
+                elements.forEach(element => {
+                    const text = element.getAttribute(`data-${this.currentLang}`);
+                    if (text) {
+                        if (element.tagName === 'INPUT' && element.type === 'text') {
+                            element.placeholder = text;
+                        } else {
+                            element.textContent = text;
+                        }
+                    }
+                });
+
+                // Update language buttons
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === this.currentLang);
+                });
+            }
+        }
+
+        // Page Navigation
+        class PageManager {
+            constructor(dataManager) {
+                this.dataManager = dataManager;
+                this.currentPage = 'home';
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.navigateTo(link.dataset.page);
+                    });
+                });
+            }
+
+            navigateTo(page) {
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                
+                document.getElementById(page).classList.add('active');
+                document.querySelector(`[data-page="${page}"]`).classList.add('active');
+                
+                this.currentPage = page;
+                this.loadPageData(page);
+            }
+
+            loadPageData(page) {
+                switch (page) {
+                    case 'home':
+                        this.updateStats();
+                        break;
+                    case 'clinics':
+                        this.loadClinicRequests();
+                        break;
+                    case 'suppliers':
+                        this.loadOpenRequests();
+                        break;
+                    case 'requests':
+                        this.loadAllRequests();
+                        this.loadRecentOffers();
+                        break;
+                    case 'veterinary':
+                        this.loadVeterinaryRequests();
+                        break;
+                    case 'beauty':
+                        this.loadBeautyRequests();
+                        break;
+                    case 'admin':
+                        this.loadAdminData();
+                        break;
+                }
+            }
+
+            updateStats() {
+                const requests = this.dataManager.getRequests();
+                const offers = this.dataManager.getOffers();
+                const suppliers = this.dataManager.getSuppliers();
+                
+                document.getElementById('totalRequests').textContent = requests.length;
+                document.getElementById('totalOffers').textContent = offers.length;
+                document.getElementById('activeSuppliers').textContent = suppliers.length;
+                document.getElementById('completedDeals').textContent = 
+                    requests.filter(r => r.status === 'completed').length;
+            }
+
+            loadClinicRequests() {
+                const container = document.getElementById('clinicRequests');
+                const requests = this.dataManager.getRequests().filter(r => r.category !== 'veterinary' && r.category !== 'beauty');
+                
+                if (requests.length === 0) {
+                    container.innerHTML = '<p>Henüz talep bulunmuyor.</p>';
+                    return;
+                }
+
+                container.innerHTML = requests.map(request => `
+                    <div class="card" style="margin-bottom: 16px;">
+                        <h4>${request.productName}</h4>
+                        <p>Kategori: ${request.category}</p>
+                        <p>Miktar: ${request.quantity}</p>
+                        <p>Durum: <span class="badge badge-${request.status === 'open' ? 'success' : 'warning'}">${request.status}</span></p>
+                        <p>Tarih: ${new Date(request.createdAt).toLocaleDateString()}</p>
+                    </div>
+                `).join('');
+            }
+
+            loadOpenRequests() {
+                const container = document.getElementById('openRequests');
+                const requests = this.dataManager.getRequests().filter(r => r.status === 'open');
+                
+                if (requests.length === 0) {
+                    container.innerHTML = '<p>Açık talep bulunmuyor.</p>';
+                    return;
+                }
+
+                container.innerHTML = requests.map(request => `
+                    <div class="card" style="margin-bottom: 16px;">
+                        <h4>${request.productName}</h4>
+                        <p>Kategori: ${request.category}</p>
+                        <p>Miktar: ${request.quantity}</p>
+                        <p>Tarih: ${new Date(request.createdAt).toLocaleDateString()}</p>
+                        <button class="btn btn-primary" onclick="window.app.createOffer('${request.id}')">
+                            Teklif Ver
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            loadAllRequests() {
+                const container = document.getElementById('allRequests');
+                const requests = this.dataManager.getRequests();
+                
+                if (requests.length === 0) {
+                    container.innerHTML = '<p>Talep bulunmuyor.</p>';
+                    return;
+                }
+
+                container.innerHTML = requests.slice(-5).map(request => `
+                    <div class="card" style="margin-bottom: 16px;">
+                        <h4>${request.productName}</h4>
+                        <p>Kategori: ${request.category}</p>
+                        <p>Miktar: ${request.quantity}</p>
+                        <p>Durum: <span class="badge badge-${request.status === 'open' ? 'success' : 'warning'}">${request.status}</span></p>
+                    </div>
+                `).join('');
+            }
+
+            loadRecentOffers() {
+                const container = document.getElementById('recentOffers');
+                const offers = this.dataManager.getOffers();
+                
+                if (offers.length === 0) {
+                    container.innerHTML = '<p>Teklif bulunmuyor.</p>';
+                    return;
+                }
+
+                container.innerHTML = offers.slice(-5).map(offer => `
+                    <div class="card" style="margin-bottom: 16px;">
+                        <h4>Teklif ID: ${offer.id}</h4>
+                        <p>Fiyat: ${offer.price} TL</p>
+                        <p>Garanti: ${offer.warranty} ay</p>
+                        <p>Tarih: ${new Date(offer.createdAt).toLocaleDateString()}</p>
+                    </div>
+                `).join('');
+            }
+
+            loadVeterinaryRequests() {
+                const container = document.getElementById('veterinaryRequests');
+                const requests = this.dataManager.getRequests().filter(r => r.type === 'veterinary');
+                
+                if (requests.length === 0) {
+                    container.innerHTML = '<p>Veteriner talebi bulunmuyor.</p>';
+                    return;
+                }
+
+                container.innerHTML = requests.map(request => `
+                    <div class="card" style="margin-bottom: 16px;">
+                        <h4>${request.productName}</h4>
+                        <p>Kategori: ${request.category}</p>
+                        <p>Hayvan: ${request.animalType}</p>
+                        <p>Miktar: ${request.quantity}</p>
+                        <p>Durum: <span class="badge badge-${request.status === 'open' ? 'success' : 'warning'}">${request.status}</span></p>
+                    </div>
+                `).join('');
+            }
+
+            loadBeautyRequests() {
+                const container = document.getElementById('beautyRequests');
+                const requests = this.dataManager.getRequests().filter(r => r.type === 'beauty');
+                
+                if (requests.length === 0) {
+                    container.innerHTML = '<p>Güzellik talebi bulunmuyor.</p>';
+                    return;
+                }
+
+                container.innerHTML = requests.map(request => `
+                    <div class="card" style="margin-bottom: 16px;">
+                        <h4>${request.productName}</h4>
+                        <p>Kategori: ${request.category}</p>
+                        <p>Alan: ${request.applicationArea}</p>
+                        <p>Miktar: ${request.quantity}</p>
+                        <p>Durum: <span class="badge badge-${request.status === 'open' ? 'success' : 'warning'}">${request.status}</span></p>
+                    </div>
+                `).join('');
+            }
+
+            loadAdminData() {
+                const requests = this.dataManager.getRequests();
+                const offers = this.dataManager.getOffers();
+                const suppliers = this.dataManager.getSuppliers();
+                
+                document.getElementById('adminTotalRequests').textContent = requests.length;
+                document.getElementById('adminTotalOffers').textContent = offers.length;
+                document.getElementById('adminActiveUsers').textContent = suppliers.length + requests.length;
+                document.getElementById('adminCompletionRate').textContent = 
+                    requests.length > 0 ? Math.round((requests.filter(r => r.status === 'completed').length / requests.length) * 100) + '%' : '0%';
+
+                // Load transactions table
+                const tbody = document.getElementById('adminTransactions');
+                const allTransactions = [
+                    ...requests.map(r => ({...r, type: 'Talep'})),
+                    ...offers.map(o => ({...o, type: 'Teklif'}))
+                ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                if (allTransactions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7">Veri bulunmuyor.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = allTransactions.slice(0, 10).map(item => `
+                    <tr>
+                        <td>${item.id}</td>
+                        <td>${item.type}</td>
+                        <td>${item.productName || 'N/A'}</td>
+                        <td>${item.category || 'N/A'}</td>
+                        <td><span class="badge badge-${item.status === 'open' ? 'success' : 'warning'}">${item.status || 'Active'}</span></td>
+                        <td>${new Date(item.createdAt).toLocaleDateString()}</td>
+                        <td><button class="btn btn-secondary" style="font-size: 12px; padding: 4px 8px;">Görüntüle</button></td>
+                    </tr>
+                `).join('');
+            }
+
+            createOffer(requestId) {
+                const price = prompt('Teklif fiyatınızı girin (TL):');
+                const warranty = prompt('Garanti süresini girin (ay):');
+                
+                if (price && warranty) {
+                    const offer = {
+                        requestId: requestId,
+                        price: parseFloat(price),
+                        warranty: warranty,
+                        supplierId: 'current-supplier'
+                    };
+                    
+                    this.dataManager.saveOffer(offer);
+                    this.notificationManager.show('Teklifiniz başarıyla gönderildi!', 'success');
+                }
+            }
+
+            toggleTheme() {
+                const html = document.documentElement;
+                const themeToggle = document.getElementById('themeToggle');
+                
+                if (html.getAttribute('data-theme') === 'dark') {
+                    html.removeAttribute('data-theme');
+                    themeToggle.textContent = '🌙';
+                    localStorage.setItem('meditek-theme', 'light');
+                } else {
+                    html.setAttribute('data-theme', 'dark');
+                    themeToggle.textContent = '☀️';
+                    localStorage.setItem('meditek-theme', 'dark');
+                }
+            }
+
+            initTheme() {
+                const savedTheme = localStorage.getItem('meditek-theme');
+                const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                const theme = savedTheme || systemTheme;
+                
+                const html = document.documentElement;
+                const themeToggle = document.getElementById('themeToggle');
+                
+                if (theme === 'dark') {
+                    html.setAttribute('data-theme', 'dark');
+                    themeToggle.textContent = '☀️';
+                } else {
+                    html.removeAttribute('data-theme');
+                    themeToggle.textContent = '🌙';
+                }
+            }
+        }
+
+        // Main Application
+        class MeditekApp {
+            constructor() {
+                this.dataManager = new DataManager();
+                this.notificationManager = new NotificationManager();
+                this.languageManager = new LanguageManager();
+                this.pageManager = new PageManager(this.dataManager);
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                // Form submissions
+                document.getElementById('clinicRequestForm')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleClinicRequest(e);
+                });
+
+                document.getElementById('supplierRegistrationForm')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleSupplierRegistration(e);
+                });
+
+                document.getElementById('veterinaryRequestForm')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleVeterinaryRequest(e);
+                });
+
+                document.getElementById('beautyRequestForm')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleBeautyRequest(e);
+                });
+
+                // Language toggle
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.languageManager.setLanguage(btn.dataset.lang);
+                    });
+                });
+
+                // Theme toggle
+                document.getElementById('themeToggle')?.addEventListener('click', () => {
+                    this.pageManager.toggleTheme();
+                });
+            }
+
+            handleClinicRequest(e) {
+                const formData = new FormData(e.target);
+                const request = {
+                    type: 'clinic',
+                    productName: document.getElementById('productName').value,
+                    category: document.getElementById('category').value,
+                    quantity: parseInt(document.getElementById('quantity').value),
+                    description: document.getElementById('description').value,
+                    deadline: document.getElementById('deadline').value
+                };
+
+                this.dataManager.saveRequest(request);
+                this.notificationManager.show('Talep başarıyla oluşturuldu!', 'success');
+                e.target.reset();
+                this.pageManager.loadClinicRequests();
+            }
+
+            handleSupplierRegistration(e) {
+                const supplier = {
+                    companyName: document.getElementById('companyName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    specialties: Array.from(document.getElementById('specialties').selectedOptions).map(o => o.value)
+                };
+
+                this.dataManager.saveSupplier(supplier);
+                this.notificationManager.show('Tedarikçi kaydı başarıyla tamamlandı!', 'success');
+                e.target.reset();
+            }
+
+            handleVeterinaryRequest(e) {
+                const request = {
+                    type: 'veterinary',
+                    productName: document.getElementById('vetProductName').value,
+                    category: document.getElementById('vetCategory').value,
+                    quantity: parseInt(document.getElementById('vetQuantity').value),
+                    animalType: document.getElementById('animalType').value,
+                    description: document.getElementById('vetDescription').value,
+                    deadline: document.getElementById('vetDeadline').value
+                };
+
+                this.dataManager.saveRequest(request);
+                this.notificationManager.show('Veteriner talebi başarıyla oluşturuldu!', 'success');
+                e.target.reset();
+                this.pageManager.loadVeterinaryRequests();
+            }
+
+            handleBeautyRequest(e) {
+                const request = {
+                    type: 'beauty',
+                    productName: document.getElementById('beautyProductName').value,
+                    category: document.getElementById('beautyCategory').value,
+                    quantity: parseInt(document.getElementById('beautyQuantity').value),
+                    applicationArea: document.getElementById('applicationArea').value,
+                    description: document.getElementById('beautyDescription').value,
+                    deadline: document.getElementById('beautyDeadline').value
+                };
+
+                this.dataManager.saveRequest(request);
+                this.notificationManager.show('Güzellik talebi başarıyla oluşturuldu!', 'success');
+                e.target.reset();
+                this.pageManager.loadBeautyRequests();
+            }
+
+            createOffer(requestId) {
+                const price = prompt('Teklif fiyatınızı girin (TL):');
+                const warranty = prompt('Garanti süresini girin (ay):');
+                
+                if (price && warranty) {
+                    const offer = {
+                        requestId: requestId,
+                        price: parseFloat(price),
+                        warranty: warranty,
+                        supplierId: 'current-supplier'
+                    };
+                    
+                    this.dataManager.saveOffer(offer);
+                    this.notificationManager.show('Teklifiniz başarıyla gönderildi!', 'success');
+                }
+            }
+
+            toggleTheme() {
+                const html = document.documentElement;
+                const themeToggle = document.getElementById('themeToggle');
+                
+                if (html.getAttribute('data-theme') === 'dark') {
+                    html.removeAttribute('data-theme');
+                    themeToggle.textContent = '🌙';
+                    localStorage.setItem('meditek-theme', 'light');
+                } else {
+                    html.setAttribute('data-theme', 'dark');
+                    themeToggle.textContent = '☀️';
+                    localStorage.setItem('meditek-theme', 'dark');
+                }
+            }
+
+            initTheme() {
+                const savedTheme = localStorage.getItem('meditek-theme');
+                const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                const theme = savedTheme || systemTheme;
+                
+                const html = document.documentElement;
+                const themeToggle = document.getElementById('themeToggle');
+                
+                if (theme === 'dark') {
+                    html.setAttribute('data-theme', 'dark');
+                    themeToggle.textContent = '☀️';
+                } else {
+                    html.removeAttribute('data-theme');
+                    themeToggle.textContent = '🌙';
+                }
+            }
+        }
+
+        // Global functions
+        function navigateToPage(page) {
+            window.app.pageManager.navigateTo(page);
+        }
+
+        // Initialize application when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            window.app = new MeditekApp();
+            window.app.initTheme();
+            
+            // Auto-refresh stats every 30 seconds
+            setInterval(() => {
+                if (window.app.pageManager.currentPage === 'home' || window.app.pageManager.currentPage === 'admin') {
+                    window.app.pageManager.updateStats();
+                }
+            }, 30000);
+        });
+
+        // Auto-detect system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            if (!localStorage.getItem('meditek-theme')) {
+                window.app && window.app.initTheme();
+            }
+        });
+    </script>
+</body>
+</html>
