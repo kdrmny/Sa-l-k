@@ -2,671 +2,739 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Meditek - Sağlık Tedarik Platformu</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Meditek • Tedarik Vitrini & Paneller</title>
 <style>
-/* ====== RESET ====== */
-* {margin:0;padding:0;box-sizing:border-box}
+/* ========== TOKENS ========== */
 :root{
-  --primary:#000;            /* metin ana */
-  --secondary:#333;
-  --background:#fff;         /* arka plan */
-  --glass:rgba(255,255,255,.78);
-  --glass-bd:rgba(0,0,0,.08);
-  --surface:rgba(255,255,255,.88);
-  --border:#e5e5e5;
-  --muted:#8a8a8a;
-  --shadow:0 10px 30px rgba(0,0,0,.08);
-  --accent:#111;             /* buton-kenar vurgusu */
-  --success:#16a34a;
-  --warn:#d97706;
+  --bg: #fbfbfc;
+  --ink: #0f1720;
+  --muted: #5f6b77;
+  --line: #e6e8ec;
+
+  --glass-bg: rgba(255,255,255,.72);
+  --glass-br: 20px;
+  --glass-blur: 28px;
+  --glass-border: rgba(255,255,255,.65);
+  --glass-shadow: 0 10px 30px rgba(15, 23, 32, .08);
+
+  --accent: #111;
+  --accent-ink: #fff;
+
+  --ok: #16a34a;
+  --warn: #f59e0b;
+  --info: #2563eb;
+  --danger:#dc2626;
+
+  --chip-bg:#f3f4f6;
+
+  --radius:18px;
 }
+
 html[data-theme="dark"]{
-  --primary:#eaeaea;
-  --secondary:#bdbdbd;
-  --background:#1a1a1a;
-  --glass:rgba(26,26,26,.78);
-  --glass-bd:rgba(255,255,255,.12);
-  --surface:rgba(30,30,30,.84);
-  --border:#333;
-  --muted:#9a9a9a;
-  --shadow:0 16px 40px rgba(0,0,0,.45);
-  --accent:#eaeaea;
-}
-body{
-  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,Arial,sans-serif;
-  background:
-    radial-gradient(1200px 600px at 20% 80%, rgba(100,120,160,.08), transparent 60%),
-    radial-gradient(1000px 500px at 80% 10%, rgba(160,100,130,.06), transparent 60%),
-    var(--background);
-  color:var(--primary);
-  line-height:1.6;
-  min-height:100vh;
+  --bg: #0c0d0f;
+  --ink: #f3f5f7;
+  --muted:#9aa3ad;
+  --line:#2a2e33;
+
+  --glass-bg: rgba(20,22,26,.70);
+  --glass-br: 20px;
+  --glass-blur: 26px;
+  --glass-border: rgba(255,255,255,.14);
+  --glass-shadow: 0 20px 40px rgba(0,0,0,.45);
+
+  --accent:#e5e7eb;
+  --accent-ink:#111;
+
+  --chip-bg:#161a1f;
 }
 
-/* ====== NAVBAR ====== */
-.navbar{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  width:96%;max-width:1200px;z-index:1000;
-  background:rgba(255,255,255,.66);
-  -webkit-backdrop-filter:blur(18px) saturate(.9);
-  backdrop-filter:blur(18px) saturate(.9);
-  border:1px solid var(--glass-bd);
-  border-radius:20px;padding:10px 14px;box-shadow:var(--shadow);
+*{box-sizing:border-box} body{
+  margin:0; background:
+  radial-gradient(1200px 600px at -10% -10%, rgba(0,0,0,.06), transparent 60%),
+  radial-gradient(900px 500px at 110% 10%, rgba(0,0,0,.05), transparent 60%),
+  var(--bg);
+  color:var(--ink); font: 500 15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Inter,Helvetica,Arial;
 }
-html[data-theme="dark"] .navbar{background:rgba(26,26,26,.75)}
-.nav-row{display:flex;align-items:center;gap:10px}
-.logo{font-weight:800;letter-spacing:.3px;font-size:18px;padding:6px 10px;border-radius:12px}
-.logo b{font-weight:900}
-.nav-spacer{flex:1}
-.nav-links{display:flex;gap:4px;list-style:none}
-.nav-link{
-  padding:8px 12px;border-radius:14px;text-decoration:none;color:var(--secondary);
-  border:1px solid transparent;transition:.2s;
-}
-.nav-link:hover,.nav-link.active{color:var(--primary);background:rgba(127,127,127,.08);border-color:var(--glass-bd)}
-.theme-btn{
-  border:1px solid var(--border);background:transparent;color:var(--primary);
-  padding:8px 10px;border-radius:12px;cursor:pointer;transition:.2s;
-}
-.theme-btn:hover{background:rgba(127,127,127,.08)}
 
-/* ====== CATEGORY DRAWER (LEFT) ====== */
-.drawer-toggle{
-  border:1px solid var(--border);background:var(--surface);color:var(--primary);
-  padding:8px 12px;border-radius:12px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:8px;
+/* NAV */
+.nav{
+  position:sticky; top:16px; z-index:9;
+  width:min(1100px,92%); margin:16px auto 12px;
+  padding:10px 14px; border-radius:24px;
+  background:var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.05);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.05);
+  border:1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,.45);
 }
-.drawer-toggle:hover{transform:translateY(-1px)}
+.nav .row{display:flex; align-items:center; gap:10px; justify-content:space-between}
+.nav .brand{font-weight:800; letter-spacing:.2px}
+.nav .pill{display:flex; gap:6px; align-items:center}
+.btn, .chip{
+  border:1px solid var(--line); border-radius:14px;
+  background:transparent; color:var(--ink);
+  padding:8px 12px; cursor:pointer;
+}
+.btn:hover{background:var(--chip-bg)}
+.btn.primary{border-color:var(--accent); background:var(--accent); color:var(--accent-ink)}
+.switch{
+  border:1px solid var(--line); border-radius:14px; display:flex; padding:3px; gap:3px;
+  background:var(--chip-bg)
+}
+.switch button{
+  border:none; background:transparent; padding:6px 10px; border-radius:10px; color:var(--muted); cursor:pointer
+}
+.switch button.active{background:var(--ink); color:var(--bg)}
+
+/* LAYOUT */
+.wrap{width:min(1100px,92%); margin:24px auto 80px}
+.section{margin:18px 0}
+.glass{
+  background:var(--glass-bg);
+  border-radius:var(--glass-br);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.08) contrast(1.03);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.08) contrast(1.03);
+  border:1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,.55);
+  padding:22px;
+}
+h1{font-size:40px; margin:8px 0 6px}
+h2{font-size:22px; margin:0 0 12px}
+.sub{color:var(--muted)}
+
+/* GRID */
+.grid{display:grid; gap:14px}
+.grid.cards{grid-template-columns: repeat(auto-fit,minmax(280px,1fr))}
+
+/* CARDS */
+.card{padding:18px; border-radius:var(--radius); border:1px solid var(--line); background:rgba(255,255,255,.82)}
+html[data-theme="dark"] .card{background:rgba(22,24,28,.78)}
+.card .title{font-weight:700; font-size:16px}
+.meta{display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 2px}
+.chip{background:var(--chip-bg); border-color:transparent; color:var(--ink)}
+.badge{padding:4px 10px; border-radius:999px; font:700 11px/1 ui-sans-serif; display:inline-flex; gap:6px; align-items:center}
+.badge.ok{background:rgba(22,163,74,.1); color:var(--ok)}
+.badge.warn{background:rgba(245,158,11,.12); color:var(--warn)}
+.badge.info{background:rgba(37,99,235,.12); color:var(--info)}
+.badge.muted{background:var(--chip-bg); color:var(--muted)}
+
+/* DRAWER */
 .drawer{
-  position:fixed;inset:0 auto 0 0;width:300px;max-width:86vw;transform:translateX(-110%);
-  background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(.9);backdrop-filter:blur(18px) saturate(.9);
-  border-right:1px solid var(--glass-bd);box-shadow:var(--shadow);z-index:1200;transition:transform .28s ease;
+  position:fixed; inset:0; display:none;
 }
-.drawer.open{transform:translateX(0)}
-.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--glass-bd)}
-.drawer-title{font-weight:700}
-.drawer-body{padding:14px}
-.filter-group{margin-bottom:18px}
-.group-title{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
-.chip{
-  display:inline-flex;align-items:center;gap:8px;padding:8px 12px;margin:6px 6px 0 0;border-radius:999px;
-  border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:.2s;font-size:14px;
+.drawer.on{display:block}
+.drawer .mask{
+  position:absolute; inset:0; background:rgba(0,0,0,.3)
 }
-.chip.active{border-color:var(--accent)}
-.search-box{display:flex;gap:8px;margin-top:10px}
-.input{
-  flex:1;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--background);color:var(--primary);
+.drawer .panel{
+  position:absolute; top:0; left:0; height:100%; width:min(420px,92%);
+  background:var(--glass-bg); backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-right:1px solid var(--glass-border); padding:20px; overflow:auto
 }
-.apply-btn{padding:10px 12px;border-radius:10px;border:1px solid var(--accent);background:transparent;color:var(--primary);cursor:pointer}
+.drawer h3{margin:0 0 12px}
+.rowv{display:flex; flex-wrap:wrap; gap:10px}
 
-/* overlay */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.25);backdrop-filter:blur(2px);z-index:1100;opacity:0;pointer-events:none;transition:.25s}
-.overlay.show{opacity:1;pointer-events:auto}
+/* TABLE */
+.table{width:100%; border-collapse:collapse; border:1px solid var(--line); border-radius:12px; overflow:hidden}
+.table th, .table td{padding:10px 12px; border-bottom:1px solid var(--line); text-align:left}
+.table th{background:var(--chip-bg)}
 
-/* ====== CONTAINER / PAGES ====== */
-.container{max-width:1200px;margin:0 auto;padding:100px 16px 40px}
-.page{display:none}
-.page.active{display:block}
-
-/* ====== HERO (HOME) ====== */
-.hero{margin-top:36px;margin-bottom:22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.hero h1{
-  font-size:28px;font-weight:800;letter-spacing:.2px;
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+/* CHAT */
+.chat{
+  display:grid; grid-template-columns:260px 1fr; gap:14px
 }
-.hero-sub{color:var(--secondary)}
-.pilot{
-  background:rgba(22,163,74,.10);border:1px solid rgba(22,163,74,.25);
-  padding:8px 12px;border-radius:12px;font-weight:600;color:var(--success)
-}
+.threads{border:1px solid var(--line); border-radius:12px; overflow:hidden; height:420px; display:flex; flex-direction:column}
+.threads .item{padding:12px; border-bottom:1px solid var(--line); cursor:pointer}
+.threads .item.active{background:var(--chip-bg)}
+.room{border:1px solid var(--line); border-radius:12px; height:420px; display:flex; flex-direction:column}
+.room .msgs{flex:1; overflow:auto; padding:12px}
+.msg{margin:8px 0; max-width:80%}
+.msg .bubble{padding:10px 12px; border-radius:12px}
+.msg.me{margin-left:auto; text-align:right}
+.msg.me .bubble{background:var(--info); color:#fff}
+.msg.other .bubble{background:var(--chip-bg)}
+.room .composer{display:flex; gap:8px; padding:10px; border-top:1px solid var(--line)}
+.room .composer input{flex:1; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:transparent; color:var(--ink)}
 
-/* ====== SUPPLIER SHOWCASE ====== */
-.grid{display:grid;gap:16px}
-.grid-3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-.card{
-  background:var(--surface);border:1px solid var(--glass-bd);border-radius:18px;padding:16px;box-shadow:var(--shadow);transition:.2s;
-}
-.card:hover{transform:translateY(-4px)}
-.card-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-.logo-badge{
-  width:40px;height:40px;border-radius:12px;border:1px solid var(--border);display:grid;place-items:center;
-  background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,.3));
-}
-.s-name{font-weight:700}
-.s-meta{font-size:12px;color:var(--muted)}
-.pill{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid var(--border);font-size:12px;color:var(--secondary);margin-right:6px}
-.row{display:flex;gap:8px;flex-wrap:wrap}
-.cta{margin-top:12px;display:flex;gap:8px}
-.btn{
-  border:1px solid var(--accent);background:transparent;color:var(--primary);
-  padding:10px 12px;border-radius:12px;cursor:pointer;transition:.2s;font-weight:600;
-}
-.btn:hover{transform:translateY(-1px)}
-.badges{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
-.badge{font-size:11px;border:1px solid var(--border);padding:4px 8px;border-radius:999px}
-.price-hint{margin-top:8px;font-size:12px;color:var(--muted)}
+/* FOOT */
+.footer{color:var(--muted); font-size:13px; text-align:center; margin:28px 0}
 
-/* ====== SECTIONS (kept) ====== */
-.section{background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(.9);backdrop-filter:blur(18px) saturate(.9);border:1px solid var(--glass-bd);border-radius:18px;padding:20px;margin-bottom:18px}
-.section h2{font-size:20px;margin-bottom:6px}
-
-/* forms */
-.form{display:grid;gap:12px}
-.label{font-weight:700;font-size:14px}
-.input, .select, .textarea{width:100%}
-.textarea{min-height:110px;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--background);color:var(--primary)}
-
-/* table simple */
-.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px}
-table{width:100%;border-collapse:collapse;background:var(--background)}
-th,td{padding:12px;border-bottom:1px solid var(--border);text-align:left}
-th{font-size:13px;color:var(--secondary)}
-
-/* responsive */
-@media (max-width:768px){
-  .nav-links{display:none}
-  .container{padding-top:100px}
-  .grid-3{grid-template-columns:1fr}
+/* MOBILE */
+@media (max-width:860px){
+  .chat{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- ===== NAVBAR ===== -->
-<nav class="navbar">
-  <div class="nav-row">
-    <button class="drawer-toggle" id="drawerBtn">☰ Kategoriler</button>
-    <div class="logo">Meditek</div>
-    <div class="nav-spacer"></div>
-    <ul class="nav-links">
-      <li><a href="#" class="nav-link active" data-page="home">Ana Sayfa</a></li>
-      <li><a href="#" class="nav-link" data-page="clinics">Klinikler</a></li>
-      <li><a href="#" class="nav-link" data-page="suppliers">Tedarikçiler</a></li>
-      <li><a href="#" class="nav-link" data-page="requests">Talepler</a></li>
-      <li><a href="#" class="nav-link" data-page="veterinary">Veteriner</a></li>
-      <li><a href="#" class="nav-link" data-page="beauty">Güzellik</a></li>
-      <li><a href="#" class="nav-link" data-page="admin">Admin</a></li>
-      <li><a href="#" class="nav-link" data-page="demo">Demo</a></li>
-    </ul>
-    <button class="theme-btn" id="themeBtn" title="Tema">🌙</button>
-  </div>
-</nav>
-
-<!-- ===== LEFT DRAWER + OVERLAY ===== -->
-<aside class="drawer" id="drawer">
-  <div class="drawer-head">
-    <div class="drawer-title">Filtreler</div>
-    <button class="theme-btn" id="drawerClose">✕</button>
-  </div>
-  <div class="drawer-body">
-    <div class="filter-group">
-      <div class="group-title">Kategori</div>
-      <div id="chipGroup">
-        <!-- chips JS ile doldurulur -->
-      </div>
+<!-- NAV -->
+<div class="nav">
+  <div class="row">
+    <div class="pill">
+      <button id="btnDrawer" class="btn">☰ Kategoriler</button>
+      <div class="brand">Meditek</div>
     </div>
-    <div class="filter-group">
-      <div class="group-title">Arama</div>
-      <div class="search-box">
-        <input class="input" id="searchInput" placeholder="Tedarikçi, ürün, şehir..." />
-        <button class="apply-btn" id="applySearch">Uygula</button>
+    <div class="pill" style="gap:8px">
+      <div class="switch" id="roleSwitch">
+        <button data-role="clinic" class="active">Klinik</button>
+        <button data-role="supplier">Tedarikçi</button>
       </div>
-    </div>
-    <div class="filter-group">
-      <div class="group-title">Etiket</div>
-      <div id="tagGroup">
-        <span class="chip" data-tag="CE">CE</span>
-        <span class="chip" data-tag="ISO">ISO</span>
-        <span class="chip" data-tag="TİTUBB">TİTUBB</span>
-        <span class="chip" data-tag="FDA">FDA</span>
+      <div class="switch" id="themeSwitch">
+        <button data-theme="light" class="active">☀︎</button>
+        <button data-theme="dark">🌙</button>
       </div>
     </div>
   </div>
-</aside>
-<div class="overlay" id="overlay"></div>
+</div>
 
-<!-- ===== CONTAINER ===== -->
-<main class="container">
-
-  <!-- ===== HOME: TEDARİKÇİ VİTRİNİ ===== -->
-  <section id="home" class="page active">
-    <div class="hero">
-      <h1>Tedarikçi Vitrini</h1>
-      <span class="hero-sub">Şeffaf, hızlı ve güvenli tedarik ağı</span>
-      <span class="pilot">🎯 Pilot ücretsiz – güvenle deneyin</span>
+<!-- FILTER DRAWER -->
+<div id="drawer" class="drawer">
+  <div class="mask" data-close></div>
+  <div class="panel glass">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <h3>Filtreler</h3><button class="btn" data-close>✕</button>
     </div>
-
+    <div class="sub" style="margin-bottom:12px">Kategori, etiket ve arama ile vitrini süz.</div>
     <div class="section">
-      <div class="row" style="justify-content:space-between;align-items:center">
-        <div class="row" id="activeFilters"></div>
-        <div class="row">
-          <button class="btn" id="clearFilters">Filtreleri Temizle</button>
+      <h4>Kategori</h4>
+      <div id="filterCats" class="rowv"></div>
+    </div>
+    <div class="section">
+      <h4>Arama</h4>
+      <input id="filterQuery" placeholder="Tedarikçi, ürün, şehir..." style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--ink)" />
+    </div>
+    <div class="section">
+      <h4>Etiket</h4>
+      <div id="filterTags" class="rowv"></div>
+    </div>
+    <div class="section" style="display:flex;gap:8px">
+      <button id="applyFilters" class="btn primary">Uygula</button>
+      <button id="clearFilters" class="btn">Temizle</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- HERO -->
+  <div class="glass section">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+      <div>
+        <h1>Tedarikçi Vitrini</h1>
+        <div class="sub">Şeffaf, hızlı ve güvenli tedarik ağı</div>
+      </div>
+      <div class="badge ok">🎯 Pilot ücretsiz – güvenle deneyin</div>
+    </div>
+  </div>
+
+  <!-- VITRIN -->
+  <div class="section">
+    <div class="grid cards" id="supplierList"></div>
+  </div>
+
+  <!-- PANELS -->
+  <div class="section">
+    <div class="grid" style="grid-template-columns:1.2fr .8fr; gap:16px">
+      <!-- Clinic Panel -->
+      <div class="glass">
+        <h2>📌 Klinik Paneli</h2>
+        <div class="sub" style="margin-bottom:8px">Talep oluşturun; tedarikçiler teklif versin ve mesajlaşın.</div>
+        <form id="formRFQ" class="card" style="margin-bottom:12px">
+          <div class="title" style="margin-bottom:10px">Yeni Talep (RFQ)</div>
+          <div class="grid" style="grid-template-columns:1fr 1fr; gap:10px">
+            <input id="rfqProduct" placeholder="Ürün adı (örn. Ultrason)" class="field">
+            <select id="rfqCat" class="field">
+              <option value="">Kategori</option>
+              <option>Tıbbi Cihaz</option><option>Sarf</option><option>Laboratuvar</option><option>Görüntüleme</option><option>Veteriner</option><option>Güzellik</option>
+            </select>
+            <input id="rfqQty" type="number" placeholder="Miktar" class="field">
+            <input id="rfqDeadline" type="date" class="field">
+          </div>
+          <input id="rfqNote" placeholder="Açıklama (opsiyonel)" class="field" style="margin-top:10px">
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="btn primary" type="submit">Talep Oluştur</button>
+            <button id="btnSeeRFQs" class="btn" type="button">Taleplerim</button>
+          </div>
+        </form>
+        <div id="clinicRFQs" class="grid cards"></div>
+      </div>
+
+      <!-- Supplier Panel -->
+      <div class="glass">
+        <h2>🏭 Tedarikçi Paneli</h2>
+        <div class="sub" style="margin-bottom:8px">Uygun RFQ’ları görün, teklif verin, aşamaları ilerletin.</div>
+        <form id="formSupplier" class="card" style="margin-bottom:12px">
+          <div class="title" style="margin-bottom:10px">Hızlı Kayıt / Güncelle</div>
+          <input id="supName" placeholder="Şirket adı" class="field">
+          <input id="supEmail" placeholder="E-posta" class="field">
+          <input id="supCity" placeholder="Şehir" class="field">
+          <input id="supTags" placeholder="Sertifikalar (CE, ISO, TİTUBB, FDA)" class="field">
+          <input id="supSpecs" placeholder="Uzmanlıklar (virgülle: Tıbbi Cihaz, Görüntüleme…)" class="field">
+          <button class="btn primary" type="submit">Kaydet</button>
+        </form>
+        <div id="supplierRFQs" class="grid cards"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MESSAGES -->
+  <div class="section glass">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px">
+      <h2>💬 Mesajlar</h2>
+      <span class="sub" id="whoAmI"></span>
+    </div>
+    <div class="chat" id="chatArea">
+      <div class="threads" id="threadList"></div>
+      <div class="room">
+        <div class="msgs" id="msgs"></div>
+        <div class="composer">
+          <input id="msgInput" placeholder="Mesaj yazın…" />
+          <button class="btn primary" id="sendMsg">Gönder</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="grid grid-3" id="supplierGrid">
-      <!-- Kartlar JS ile doldurulur -->
+  <!-- ADMIN -->
+  <div class="section glass">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2>🛠️ Admin Paneli</h2>
+      <div class="badge muted">Demo veri – localStorage</div>
     </div>
-  </section>
+    <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="card"><div class="title">Toplam Talep</div><div id="mStat1" style="font-size:26px;font-weight:800">0</div></div>
+      <div class="card"><div class="title">Toplam Teklif</div><div id="mStat2" style="font-size:26px;font-weight:800">0</div></div>
+      <div class="card"><div class="title">Tedarikçi</div><div id="mStat3" style="font-size:26px;font-weight:800">0</div></div>
+      <div class="card"><div class="title">Mesaj</div><div id="mStat4" style="font-size:26px;font-weight:800">0</div></div>
+    </div>
+    <div class="section">
+      <h3>Talepler</h3>
+      <table class="table" id="tblRFQ"></table>
+    </div>
+    <div class="section">
+      <h3>Teklifler</h3>
+      <table class="table" id="tblOffers"></table>
+    </div>
+    <div class="section">
+      <h3>Mesajlar</h3>
+      <table class="table" id="tblMsgs"></table>
+    </div>
+  </div>
 
-  <!-- ===== CLINICS ===== -->
-  <section id="clinics" class="page">
-    <div class="section">
-      <h2>Klinik & Hastane Paneli</h2>
-      <p>İhtiyacınızı girin, tedarikçiler teklif versin.</p>
-    </div>
-    <div class="section">
-      <h3>Yeni Talep</h3>
-      <form id="clinicForm" class="form">
-        <label class="label">Ürün Adı</label>
-        <input class="input" id="cName" required />
-        <label class="label">Kategori</label>
-        <select class="input" id="cCat" required>
-          <option value="">Seçiniz</option>
-          <option value="medical-device">Tıbbi Cihaz</option>
-          <option value="consumables">Sarf</option>
-          <option value="laboratory">Laboratuvar</option>
-          <option value="imaging">Görüntüleme</option>
-        </select>
-        <label class="label">Miktar</label>
-        <input type="number" class="input" id="cQty" min="1" value="1" required />
-        <label class="label">Açıklama</label>
-        <textarea class="textarea" id="cDesc" placeholder="Marka/model, sertifika, teslim koşulu…"></textarea>
-        <button class="btn" type="submit">Talep Oluştur</button>
-      </form>
-    </div>
-    <div class="section">
-      <h3>Aktif Taleplerim</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Ürün</th><th>Kat.</th><th>Miktar</th><th>Durum</th><th>Tarih</th></tr></thead>
-          <tbody id="clinicList"><tr><td colspan="6">Kayıt yok</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== SUPPLIERS ===== -->
-  <section id="suppliers" class="page">
-    <div class="section"><h2>Tedarikçi Paneli</h2><p>Vitrinde görünmek için kaydolun, taleplere teklif verin.</p></div>
-    <div class="section">
-      <h3>Tedarikçi Kaydı</h3>
-      <form id="supForm" class="form">
-        <label class="label">Şirket Adı</label>
-        <input class="input" id="sName" required />
-        <label class="label">Şehir</label>
-        <input class="input" id="sCity" placeholder="İstanbul, İzmir…" />
-        <label class="label">Uzmanlıklar (Ctrl/Cmd ile çoklu seç)</label>
-        <select class="input" id="sSpec" multiple>
-          <option value="medical-device">Tıbbi Cihaz</option>
-          <option value="consumables">Sarf</option>
-          <option value="laboratory">Laboratuvar</option>
-          <option value="imaging">Görüntüleme</option>
-          <option value="veterinary">Veteriner</option>
-          <option value="beauty">Güzellik</option>
-        </select>
-        <label class="label">Sertifikalar</label>
-        <div class="row">
-          <label class="chip"><input type="checkbox" value="CE"> CE</label>
-          <label class="chip"><input type="checkbox" value="ISO"> ISO</label>
-          <label class="chip"><input type="checkbox" value="TİTUBB"> TİTUBB</label>
-          <label class="chip"><input type="checkbox" value="FDA"> FDA</label>
-        </div>
-        <label class="label">Kısa Açıklama</label>
-        <textarea class="textarea" id="sAbout" placeholder="Örn. Ultrason ve EKG cihazlarında yetkili satıcı"></textarea>
-        <button class="btn" type="submit">Kaydı Tamamla</button>
-      </form>
-    </div>
-    <div class="section">
-      <h3>Vitrindeki Kaydım</h3>
-      <div id="mySupplier">Henüz kayıt yok.</div>
-    </div>
-  </section>
-
-  <!-- ===== REQUESTS ===== -->
-  <section id="requests" class="page">
-    <div class="section"><h2>Talepler & Teklifler</h2></div>
-    <div class="section">
-      <h3>Son Talepler</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Ürün</th><th>Kategori</th><th>Miktar</th><th>Durum</th></tr></thead>
-          <tbody id="allReq"><tr><td colspan="5">Veri yok</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== VETERINARY ===== -->
-  <section id="veterinary" class="page">
-    <div class="section"><h2>Veteriner Paneli</h2><p>Veteriner sarf ve ekipman talebi oluşturun.</p></div>
-    <div class="section">
-      <h3>Yeni Talep</h3>
-      <form id="vetForm" class="form">
-        <label class="label">Ürün</label><input class="input" id="vName" required/>
-        <label class="label">Kategori</label>
-        <select class="input" id="vCat" required>
-          <option value="">Seçiniz</option>
-          <option value="surgery">Cerrahi</option>
-          <option value="diagnosis">Tanı</option>
-          <option value="medication">İlaç/Aşı</option>
-        </select>
-        <label class="label">Miktar</label><input type="number" class="input" id="vQty" value="1" min="1" required/>
-        <button class="btn" type="submit">Talep Oluştur</button>
-      </form>
-    </div>
-  </section>
-
-  <!-- ===== BEAUTY ===== -->
-  <section id="beauty" class="page">
-    <div class="section"><h2>Güzellik & Epilasyon</h2><p>Lazer, dermokozmetik vb. için talep açın.</p></div>
-    <div class="section">
-      <h3>Yeni Talep</h3>
-      <form id="bForm" class="form">
-        <label class="label">Ürün</label><input class="input" id="bName" required/>
-        <label class="label">Kategori</label>
-        <select class="input" id="bCat" required>
-          <option value="">Seçiniz</option>
-          <option value="laser">Lazer</option>
-          <option value="skincare">Cilt Bakım</option>
-          <option value="consumables">Sarf</option>
-        </select>
-        <label class="label">Miktar</label><input type="number" class="input" id="bQty" value="1" min="1" required/>
-        <button class="btn" type="submit">Talep Oluştur</button>
-      </form>
-    </div>
-  </section>
-
-  <!-- ===== ADMIN (özet) ===== -->
-  <section id="admin" class="page">
-    <div class="section"><h2>Admin Paneli</h2><p>Özet metrikler ve işlemler.</p></div>
-    <div class="section">
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Tür</th><th>Ad</th><th>Kategori/Uzmanlık</th><th>Tarih</th></tr></thead>
-          <tbody id="adminTbl"><tr><td colspan="5">Veri yok</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== DEMO ===== -->
-  <section id="demo" class="page">
-    <div class="section">
-      <h2>Demo</h2>
-      <p>Bu bölüm demo verilerle çalışır; gerçek işlem değildir.</p>
-    </div>
-  </section>
-
-</main>
+  <div class="footer">© Meditek Pilot – cam efektli arayüz • Tema: <span id="themeLabel">Açık</span></div>
+</div>
 
 <script>
-/* ============ STORAGE HELPERS ============ */
-const LS = {
-  get(key, fallback){ try{ return JSON.parse(localStorage.getItem(key)) ?? fallback }catch{ return fallback } },
-  set(key,val){ localStorage.setItem(key, JSON.stringify(val)) }
+/* ====== UTIL ====== */
+const $=(sel,root=document)=>root.querySelector(sel);
+const $$=(sel,root=document)=>[...root.querySelectorAll(sel)];
+const uid=()=>Math.random().toString(36).slice(2)+Date.now().toString(36);
+
+/* ====== DATA LAYER (localStorage) ====== */
+const DB={
+  get(key,def){return JSON.parse(localStorage.getItem(key)||JSON.stringify(def))},
+  set(key,val){localStorage.setItem(key,JSON.stringify(val))},
+
+  suppliers(){return DB.get('suppliers',[])},
+  saveSupplier(s){
+    const arr=DB.suppliers();
+    const i=arr.findIndex(x=>x.email===s.email);
+    if(i>-1) arr[i]={...arr[i],...s}
+    else arr.push({...s,id:uid()});
+    DB.set('suppliers',arr);
+    return arr.find(x=>x.email===s.email);
+  },
+
+  rfqs(){return DB.get('rfqs',[])},
+  saveRFQ(r){
+    const arr=DB.rfqs();
+    arr.push({...r,id:uid(),created:Date.now(),status:'open'});
+    DB.set('rfqs',arr);
+  },
+  advanceOffer(ofId){
+    const steps=['Ordered','Processing','Dispatched','Delivered'];
+    const offs=DB.offers();
+    const o=offs.find(x=>x.id===ofId); if(!o) return;
+    const idx=steps.indexOf(o.stage||'Ordered');
+    o.stage=steps[Math.min(idx+1,steps.length-1)];
+    DB.set('offers',offs);
+  },
+
+  offers(){return DB.get('offers',[])},
+  saveOffer(o){
+    const offs=DB.offers();
+    offs.push({...o,id:uid(),created:Date.now(),stage:'Ordered'});
+    DB.set('offers',offs);
+  },
+
+  messages(){return DB.get('messages',[])},
+  sendMessage(m){
+    const arr=DB.messages();
+    arr.push({...m,id:uid(),ts:Date.now()});
+    DB.set('messages',arr);
+  }
 };
 
-/* ============ DATA SEEDS ============ */
-function seedSuppliersIfEmpty(){
-  const ex = LS.get('suppliers', []);
-  if(ex.length) return;
-  const seed = [
-    {id:'s1', name:'MediTech Solutions', city:'İstanbul', specs:['medical-device','imaging'], tags:['CE','ISO'], about:'Ultrason & EKG cihazlarında yetkili satıcı', hint:'Ultrason 150-500 bin TL'},
-    {id:'s2', name:'SağlıkPlus A.Ş.', city:'Ankara', specs:['consumables','laboratory'], tags:['CE','TİTUBB'], about:'Sarf & lab kitleri hızlı teslim', hint:'Sarf kit 25-80 TL/adet'},
-    {id:'s3', name:'LabPro Medikal', city:'İzmir', specs:['laboratory'], tags:['ISO'], about:'Hematoloji, biyokimya kitleri', hint:'Biyokimya kit 800-2.500 TL'},
-    {id:'s4', name:'VetSupply Pro', city:'Bursa', specs:['veterinary'], tags:['CE'], about:'Veteriner sarf ve tanı kitleri', hint:'Vet kan kiti 25-80 TL/adet'},
-    {id:'s5', name:'BeautyTech Intl', city:'İstanbul', specs:['beauty','equipment'], tags:['CE','FDA'], about:'Lazer & estetik cihazları', hint:'Lazer başlık 500-1.500 TL'},
-    {id:'s6', name:'ImageSense', city:'Antalya', specs:['imaging'], tags:['ISO'], about:'Röntgen & USG aksesuar', hint:'Jel 30-60 TL/L'}
-  ];
-  LS.set('suppliers', seed);
-}
-function ensureLists(){
-  if(!LS.get('suppliers', null)) LS.set('suppliers', []);
-  if(!LS.get('requests', null)) LS.set('requests', []);
-}
+/* ====== SEED ====== */
+(function seed(){
+  if(DB.suppliers().length) return;
+  DB.set('suppliers',[
+    {id:uid(), name:'MediTech Solutions', email:'meditech@demo.com', city:'İstanbul', tags:['CE','ISO'], specs:['Tıbbi Cihaz','Görüntüleme']},
+    {id:uid(), name:'LabPro', email:'labpro@demo.com', city:'Ankara', tags:['CE'], specs:['Laboratuvar','Sarf']},
+    {id:uid(), name:'BeautyTech', email:'beauty@demo.com', city:'İzmir', tags:['CE','FDA'], specs:['Güzellik','Estetik Cihazlar']}
+  ]);
+  DB.set('rfqs',[
+    {id:uid(), product:'Ultrason Cihazı', cat:'Görüntüleme', qty:1, deadline:'2025-09-30', note:'Yetkili satıcı tercih', created:Date.now()-86400000, status:'open', clinic:'Demo Klinik'},
+    {id:uid(), product:'Kan Sayım Kiti', cat:'Laboratuvar', qty:50, deadline:'2025-09-20', note:'Kedi&köpek için', created:Date.now()-43200000, status:'open', clinic:'Demo Vet'}
+  ]);
+  const rfq=DB.rfqs()[0]; const sup=DB.suppliers()[0];
+  DB.set('messages',[{id:uid(), rfqId:rfq.id, supplierId:sup.id, from:'clinic', text:'Merhaba, demo görüşmesi.', ts:Date.now()-3600000}]);
+})();
 
-/* ============ STATE ============ */
-const State = {
-  filters:{ categories:new Set(), tags:new Set(), q:'' }
+/* ====== STATE ====== */
+let STATE={
+  role:'clinic', // clinic | supplier
+  supplierId: DB.suppliers()[0]?.id || null,
+  activeThread:null,
+  filters:{cats:[], tags:[], q:''}
 };
 
-/* ============ UI HELPERS ============ */
-function $(sel, all=false){ return all ? document.querySelectorAll(sel) : document.querySelector(sel) }
-function setActivePage(id){
-  $('.page.active')?.classList.remove('active');
-  $('#'+id).classList.add('active');
-  $('.nav-link.active')?.classList.remove('active');
-  document.querySelector(`.nav-link[data-page="${id}"]`)?.classList.add('active');
-  if(id==='home') renderSupplierGrid();
-  if(id==='clinics') renderClinicTable();
-  if(id==='requests') renderAllReq();
-  if(id==='admin') renderAdmin();
-}
+/* ====== THEME ====== */
+const setTheme=(t)=>{
+  document.documentElement.setAttribute('data-theme', t==='dark'?'dark':'light');
+  $('#themeLabel').textContent = t==='dark'?'Koyu':'Açık';
+  $$('#themeSwitch button').forEach(b=>b.classList.toggle('active', b.dataset.theme===t));
+  localStorage.setItem('theme', t);
+};
+setTheme(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+$('#themeSwitch').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  setTheme(b.dataset.theme);
+});
 
-/* ============ DRAWER ============ */
-const drawer = $('#drawer'), overlay = $('#overlay');
-$('#drawerBtn').addEventListener('click', ()=>{ drawer.classList.add('open'); overlay.classList.add('show'); });
-$('#drawerClose').addEventListener('click', closeDrawer);
-overlay.addEventListener('click', closeDrawer);
-function closeDrawer(){ drawer.classList.remove('open'); overlay.classList.remove('show'); }
+/* ====== ROLE / PROFILE ====== */
+const setRole=(role)=>{
+  STATE.role=role;
+  $$('#roleSwitch button').forEach(b=>b.classList.toggle('active', b.dataset.role===role));
+  const label = role==='clinic' ? 'Klinik profili' :
+    `Tedarikçi: ${(DB.suppliers().find(s=>s.id===STATE.supplierId)||{}).name||'Seçili değil'}`;
+  $('#whoAmI').textContent = label;
+  renderAll();
+};
+$('#roleSwitch').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  setRole(b.dataset.role);
+});
+setRole(STATE.role);
 
-/* Build category chips in drawer */
-const categoryMap = [
-  {id:'medical-device', label:'Tıbbi Cihaz'},
-  {id:'consumables', label:'Sarf'},
-  {id:'laboratory', label:'Laboratuvar'},
-  {id:'imaging', label:'Görüntüleme'},
-  {id:'veterinary', label:'Veteriner'},
-  {id:'beauty', label:'Güzellik'}
-];
-function buildChips(){
-  const wrap = document.createElement('div');
-  categoryMap.forEach(c=>{
-    const el = document.createElement('span');
-    el.className = 'chip'; el.dataset.cat = c.id; el.textContent = c.label;
-    el.addEventListener('click', ()=>{
-      if(State.filters.categories.has(c.id)) State.filters.categories.delete(c.id);
-      else State.filters.categories.add(c.id);
-      el.classList.toggle('active');
-      renderActiveFilters();
+/* ====== DRAWER (Filters) ====== */
+const CATS=['Tıbbi Cihaz','Sarf','Laboratuvar','Görüntüleme','Veteriner','Güzellik'];
+const TAGS=['CE','ISO','TİTUBB','FDA'];
+
+const drawChips=(arr, el, active=[])=>{
+  el.innerHTML='';
+  arr.forEach(x=>{
+    const b=document.createElement('button');
+    b.className='chip'; b.textContent=x;
+    if(active.includes(x)) b.style.outline='2px solid var(--ink)';
+    b.addEventListener('click',()=>{
+      if(active.includes(x)) active.splice(active.indexOf(x),1);
+      else active.push(x);
+      drawChips(arr,el,active);
     });
-    wrap.appendChild(el);
+    el.appendChild(b);
   });
-  $('#chipGroup').appendChild(wrap);
+  return active;
+};
+STATE.filters.cats = drawChips(CATS, $('#filterCats'), STATE.filters.cats);
+STATE.filters.tags = drawChips(TAGS, $('#filterTags'), STATE.filters.tags);
+
+const openDrawer=()=>$('#drawer').classList.add('on');
+const closeDrawer=()=>$('#drawer').classList.remove('on');
+$('#btnDrawer').onclick=openDrawer;
+$$('[data-close]').forEach(x=>x.onclick=closeDrawer);
+
+$('#applyFilters').onclick=()=>{
+  STATE.filters.q = $('#filterQuery').value.trim().toLowerCase();
+  closeDrawer(); renderVitrine();
+};
+$('#clearFilters').onclick=()=>{
+  STATE.filters={cats:[], tags:[], q:''};
+  $('#filterQuery').value='';
+  STATE.filters.cats = drawChips(CATS, $('#filterCats'), STATE.filters.cats);
+  STATE.filters.tags = drawChips(TAGS, $('#filterTags'), STATE.filters.tags);
+  renderVitrine();
+};
+
+/* ====== VITRINE ====== */
+function renderVitrine(){
+  const box=$('#supplierList'); box.innerHTML='';
+  let list=DB.suppliers();
+
+  // filters
+  if(STATE.filters.cats.length){
+    list=list.filter(s=>s.specs?.some(sp=>STATE.filters.cats.includes(sp)));
+  }
+  if(STATE.filters.tags.length){
+    list=list.filter(s=>s.tags?.some(t=>STATE.filters.tags.includes(t)));
+  }
+  if(STATE.filters.q){
+    list=list.filter(s=>(s.name+s.city+s.email+(s.specs||[]).join()+ (s.tags||[]).join()).toLowerCase().includes(STATE.filters.q))
+  }
+
+  if(!list.length){
+    box.innerHTML=`<div class="glass"><div class="sub">Filtrelere uygun tedarikçi bulunamadı.</div></div>`;
+    return;
+  }
+
+  list.forEach(s=>{
+    const card=document.createElement('div');
+    card.className='card';
+    card.innerHTML=`
+      <div class="title" style="display:flex;justify-content:space-between;align-items:center">
+        <div>${s.name}</div>
+        <span class="badge muted">${s.city||'—'}</span>
+      </div>
+      <div class="meta">
+        ${(s.specs||[]).map(x=>`<span class="chip">${x}</span>`).join('')}
+      </div>
+      <div class="meta">
+        ${(s.tags||[]).map(x=>`<span class="chip">${x}</span>`).join('')}
+      </div>
+      <div class="sub" style="margin:8px 0">💡 Ör. Ultrason 150–500 bin TL</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary" data-act="rfq">RFQ Oluştur</button>
+        <button class="btn" data-act="msg">Mesaj Gönder</button>
+      </div>
+    `;
+    card.querySelector('[data-act="rfq"]').onclick=()=>{
+      // ön doldurma
+      $('#rfqProduct').value='Ultrason Cihazı';
+      $('#rfqCat').value='Görüntüleme';
+      $('html,body'); window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+    };
+    card.querySelector('[data-act="msg"]').onclick=()=>{
+      STATE.role='clinic'; setRole('clinic');
+      openChatThread(findOrCreateThread(DB.rfqs()[0]?.id, s.id));
+    };
+    box.appendChild(card);
+  });
 }
-$('#tagGroup')?.querySelectorAll('.chip').forEach(ch=>{
-  ch.addEventListener('click', ()=>{
-    const tag = ch.dataset.tag;
-    if(State.filters.tags.has(tag)) State.filters.tags.delete(tag);
-    else State.filters.tags.add(tag);
-    ch.classList.toggle('active');
-    renderActiveFilters();
-  });
-});
-$('#applySearch').addEventListener('click', ()=>{
-  State.filters.q = $('#searchInput').value.trim().toLowerCase();
-  renderActiveFilters();
+
+/* ====== CLINIC PANEL ====== */
+const fieldStyle=`
+  .field{width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:12px; background:transparent; color:var(--ink)}
+`; const style=document.createElement('style'); style.innerHTML=fieldStyle; document.head.appendChild(style);
+
+$('#formRFQ').addEventListener('submit',e=>{
+  e.preventDefault();
+  const r={
+    product:$('#rfqProduct').value.trim(),
+    cat:$('#rfqCat').value.trim(),
+    qty:+$('#rfqQty').value||1,
+    deadline:$('#rfqDeadline').value,
+    note:$('#rfqNote').value.trim(),
+    clinic:'Klinik (Pilot)'
+  };
+  if(!r.product||!r.cat||!r.deadline){alert('Ürün, kategori ve termin zorunlu.'); return}
+  DB.saveRFQ(r); e.target.reset();
+  renderClinicRFQs(); renderAdmin(); alert('Talep eklendi.');
 });
 
-/* Active filter pills row */
-function renderActiveFilters(){
-  const row = $('#activeFilters');
-  row.innerHTML = '';
-  const parts = [];
-  if(State.filters.categories.size){
-    parts.push(...[...State.filters.categories].map(c=>{
-      const lbl = categoryMap.find(x=>x.id===c)?.label || c;
-      return `<span class="pill">${lbl} ✕</span>`;
-    }));
-  }
-  if(State.filters.tags.size){
-    parts.push(...[...State.filters.tags].map(t=>`<span class="pill">${t} ✕</span>`));
-  }
-  if(State.filters.q){
-    parts.push(`<span class="pill">"${State.filters.q}" ✕</span>`);
-  }
-  row.innerHTML = parts.join('') || '<span class="s-meta">Filtre uygulanmadı</span>';
-  renderSupplierGrid(); // apply
-}
-$('#clearFilters').addEventListener('click', ()=>{
-  State.filters = {categories:new Set(), tags:new Set(), q:''};
-  // reset chips ui
-  $('#chipGroup').querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-  $('#tagGroup').querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-  $('#searchInput').value='';
-  renderActiveFilters();
-});
+$('#btnSeeRFQs').onclick=()=>renderClinicRFQs();
 
-/* ============ SUPPLIER GRID ============ */
-function supplierCard(s){
-  const tags = (s.tags||[]).map(t=>`<span class="badge">${t}</span>`).join('');
-  const cats = (s.specs||[]).map(c=>{
-    const lbl = categoryMap.find(x=>x.id===c)?.label || c;
-    return `<span class="pill">${lbl}</span>`;
-  }).join('');
-  return `
-  <div class="card">
-    <div class="card-head">
-      <div class="logo-badge">🏷️</div>
-      <div>
-        <div class="s-name">${s.name}</div>
-        <div class="s-meta">${s.city || '—'}</div>
+function renderClinicRFQs(){
+  const box=$('#clinicRFQs'); const rfqs=DB.rfqs().slice().reverse();
+  box.innerHTML = rfqs.map(r=>`
+    <div class="card">
+      <div style="display:flex;justify-content:space-between">
+        <div class="title">${r.product}</div>
+        <span class="badge ${r.status==='open'?'info':'ok'}">${r.status}</span>
+      </div>
+      <div class="meta"><span class="chip">${r.cat}</span><span class="chip">${r.qty} adet</span><span class="chip">Termin: ${r.deadline}</span></div>
+      <div class="sub">${r.note||''}</div>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" data-view="${r.id}">Teklifler</button>
       </div>
     </div>
-    <div class="row">${cats}</div>
-    <p style="margin-top:8px">${s.about || ''}</p>
-    <div class="badges">${tags}</div>
-    ${s.hint ? `<div class="price-hint">💡 ${s.hint}</div>` : ''}
-    <div class="cta">
-      <button class="btn" onclick="openRequestTo('${s.id}')">RFQ Oluştur</button>
-      <button class="btn" onclick="contactSupplier('${s.id}')">Mesaj Gönder</button>
-    </div>
-  </div>`;
-}
-function renderSupplierGrid(){
-  const grid = $('#supplierGrid');
-  const all = LS.get('suppliers', []);
-  const f = State.filters;
-  const list = all.filter(s=>{
-    const byCat = f.categories.size ? s.specs?.some(x=>f.categories.has(x)) : true;
-    const byTag = f.tags.size ? s.tags?.some(t=>f.tags.has(t)) : true;
-    const byQ = f.q? (s.name?.toLowerCase().includes(f.q) || s.about?.toLowerCase().includes(f.q) || s.city?.toLowerCase().includes(f.q)) : true;
-    return byCat && byTag && byQ;
+  `).join('');
+
+  $$('#clinicRFQs [data-view]').forEach(b=>{
+    b.onclick=()=>openOffersFor(b.dataset.view);
   });
-  grid.innerHTML = list.length ? list.map(supplierCard).join('') : `<div class="card"><b>Sonuç yok.</b> Filtreleri genişletin.</div>`;
 }
 
-/* RFQ quick actions (demo only) */
-window.openRequestTo = function(sid){
-  setActivePage('clinics');
-  $('#cDesc').value = `Hedef tedarikçi: ${sid} — temel gereksinimler: CE/ISO`;
-}
-window.contactSupplier = function(sid){
-  alert(`Tedarikçi ${sid} ile mesajlaşma (demo).`);
-}
-
-/* ============ FORMS & TABLES ============ */
-$('#clinicForm')?.addEventListener('submit', e=>{
+/* ====== SUPPLIER PANEL ====== */
+$('#formSupplier').addEventListener('submit',e=>{
   e.preventDefault();
-  const reqs = LS.get('requests', []);
-  const item = {
-    id:'R'+Date.now(),
-    type:'clinic',
-    name:$('#cName').value,
-    cat:$('#cCat').value,
-    qty:+$('#cQty').value || 1,
-    status:'open',
-    date:new Date().toISOString()
+  const sup={
+    name:$('#supName').value.trim()||'Yeni Tedarikçi',
+    email:$('#supEmail').value.trim()||`sup${Math.floor(Math.random()*999)}@demo.com`,
+    city:$('#supCity').value.trim(),
+    tags: $('#supTags').value.split(',').map(x=>x.trim()).filter(Boolean),
+    specs: $('#supSpecs').value.split(',').map(x=>x.trim()).filter(Boolean)
   };
-  reqs.push(item); LS.set('requests', reqs);
-  e.target.reset();
-  renderClinicTable(); renderAllReq(); renderAdmin();
-  alert('Talep kaydedildi.');
+  const saved=DB.saveSupplier(sup);
+  STATE.supplierId=saved.id; setRole('supplier');
+  alert('Tedarikçi kaydı güncellendi.');
 });
-function renderClinicTable(){
-  const mine = LS.get('requests', []).filter(r=>r.type==='clinic');
-  const tb = $('#clinicList');
-  if(!mine.length){ tb.innerHTML = `<tr><td colspan="6">Kayıt yok</td></tr>`; return; }
-  tb.innerHTML = mine.slice(-20).reverse().map(r=>`
-    <tr><td>${r.id}</td><td>${r.name}</td><td>${r.cat}</td><td>${r.qty}</td><td>${r.status}</td><td>${new Date(r.date).toLocaleDateString()}</td></tr>
+
+function renderSupplierRFQs(){
+  const box=$('#supplierRFQs'); const me=DB.suppliers().find(s=>s.id===STATE.supplierId);
+  if(!me){box.innerHTML='<div class="card sub">Önce sağ üstten tedarikçi profili seçin / kaydedin.</div>'; return}
+  let rfqs=DB.rfqs().filter(r=> me.specs?.includes(r.cat) || me.specs?.some(x=>r.product.toLowerCase().includes(x.toLowerCase())));
+  if(!rfqs.length){box.innerHTML='<div class="card sub">Uzmanlığınıza uygun açık talep bulunamadı.</div>'; return}
+  box.innerHTML = rfqs.slice().reverse().map(r=>`
+    <div class="card">
+      <div style="display:flex;justify-content:space-between">
+        <div class="title">${r.product}</div>
+        <span class="badge info">open</span>
+      </div>
+      <div class="meta"><span class="chip">${r.cat}</span><span class="chip">${r.qty} adet</span></div>
+      <div class="sub">Termin: ${r.deadline}</div>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary" data-offer="${r.id}">Teklif Ver</button>
+        <button class="btn" data-chat="${r.id}">Mesaj Aç</button>
+      </div>
+    </div>
   `).join('');
-}
-function renderAllReq(){
-  const all = LS.get('requests', []);
-  const tb = $('#allReq');
-  if(!all.length){ tb.innerHTML = `<tr><td colspan="5">Veri yok</td></tr>`; return; }
-  tb.innerHTML = all.slice(-30).reverse().map(r=>`
-    <tr><td>${r.id}</td><td>${r.name||'-'}</td><td>${r.cat||'-'}</td><td>${r.qty||'-'}</td><td>${r.status}</td></tr>
-  `).join('');
+  $$('#supplierRFQs [data-offer]').forEach(b=>{
+    b.onclick=()=>{
+      const price=prompt('Teklif fiyatı (TL)'); if(!price) return;
+      DB.saveOffer({rfqId:b.dataset.offer, supplierId:STATE.supplierId, price:+price});
+      renderAdmin(); alert('Teklif gönderildi.');
+    };
+  });
+  $$('#supplierRFQs [data-chat]').forEach(b=>{
+    b.onclick=()=>{
+      openChatThread(findOrCreateThread(b.dataset.chat, STATE.supplierId));
+    };
+  });
 }
 
-/* Supplier registration */
-$('#supForm')?.addEventListener('submit', e=>{
-  e.preventDefault();
-  const arr = LS.get('suppliers', []);
-  const certs = Array.from(e.target.querySelectorAll('input[type="checkbox"]:checked')).map(i=>i.value);
-  const specs = Array.from($('#sSpec').selectedOptions).map(o=>o.value);
-  const item = {
-    id:'S'+Date.now(),
-    name:$('#sName').value,
-    city:$('#sCity').value,
-    specs, tags:certs, about:$('#sAbout').value
-  };
-  arr.push(item); LS.set('suppliers', arr);
-  e.target.reset();
-  renderMySupplier(item.id); renderSupplierGrid(); renderAdmin();
-  alert('Tedarikçi kaydı tamamlandı. Vitrine eklendi.');
-});
-function renderMySupplier(newId){
-  const arr = LS.get('suppliers', []);
-  const last = newId ? arr.find(x=>x.id===newId) : arr[arr.length-1];
-  $('#mySupplier').innerHTML = last ? supplierCard(last) : 'Henüz kayıt yok.';
+/* ====== OFFERS VIEW (clinic side) ====== */
+function openOffersFor(rfqId){
+  const offs=DB.offers().filter(o=>o.rfqId===rfqId);
+  if(!offs.length){alert('Bu talepte henüz teklif yok.'); return}
+  const txt=offs.map(o=>{
+    const s=DB.suppliers().find(x=>x.id===o.supplierId);
+    return `${s?.name||'Tedarikçi'} • ${o.price.toLocaleString()} TL • Aşama: ${o.stage}`;
+  }).join('\n');
+  alert('Gelen teklifler:\n\n'+txt+'\n\nAdmin panelinden detay/ilerletme yapabilirsiniz.');
 }
 
-/* Admin table (simple feed) */
+/* ====== CHAT ====== */
+function threadKey(rfqId, supplierId){ return `${rfqId}__${supplierId}` }
+function listThreads(role){
+  const msgs=DB.messages();
+  const map=new Map();
+  msgs.forEach(m=>{
+    const key=threadKey(m.rfqId,m.supplierId);
+    const arr=map.get(key)||[];
+    arr.push(m); map.set(key,arr);
+  });
+  // include empty threads from offers too
+  DB.offers().forEach(o=>{
+    const key=threadKey(o.rfqId,o.supplierId); if(!map.has(key)) map.set(key,[]);
+  });
+
+  // role filter
+  return [...map.entries()].filter(([key,arr])=>{
+    const [rfqId,supplierId]=key.split('__');
+    if(role==='clinic') return true;
+    return supplierId===STATE.supplierId;
+  }).map(([key,arr])=>{
+    const [rfqId,supplierId]=key.split('__');
+    const rfq=DB.rfqs().find(r=>r.id===rfqId);
+    const sup=DB.suppliers().find(s=>s.id===supplierId);
+    return {id:key, rfq, sup, last:arr.slice(-1)[0]};
+  }).sort((a,b)=>(b.last?.ts||0)-(a.last?.ts||0));
+}
+function findOrCreateThread(rfqId,supplierId){
+  return threadKey(rfqId,supplierId);
+}
+function openChatThread(key){
+  STATE.activeThread=key;
+  renderThreads(); renderMessages();
+}
+function renderThreads(){
+  const list=listThreads(STATE.role);
+  const box=$('#threadList'); box.innerHTML='';
+  if(!list.length){ box.innerHTML=`<div class="item sub">Henüz sohbet yok</div>`; return}
+  list.forEach(t=>{
+    const el=document.createElement('div'); el.className='item'+(STATE.activeThread===t.id?' active':'');
+    el.innerHTML=`<div style="font-weight:700">${t.sup?.name||'Tedarikçi'}</div>
+      <div class="sub" style="font-size:12px">${t.rfq?.product||'RFQ'}${t.last? ' — '+t.last.text.slice(0,28):''}</div>`;
+    el.onclick=()=>openChatThread(t.id);
+    box.appendChild(el);
+  });
+  if(!STATE.activeThread && list[0]) STATE.activeThread=list[0].id;
+}
+function renderMessages(){
+  const msgs=DB.messages();
+  const box=$('#msgs'); box.innerHTML='';
+  if(!STATE.activeThread) return;
+  const [rfqId, supplierId]=STATE.activeThread.split('__');
+  const rfq=DB.rfqs().find(r=>r.id===rfqId);
+  const sup=DB.suppliers().find(s=>s.id===supplierId);
+  const arr=msgs.filter(m=>m.rfqId===rfqId && m.supplierId===supplierId);
+  if(rfq) box.insertAdjacentHTML('beforeend', `<div class="sub" style="margin-bottom:6px">Konu: <b>${rfq.product}</b> – ${sup?.name||''}</div>`);
+  arr.forEach(m=>{
+    const me = (STATE.role==='supplier' ? 'supplier':'clinic') === m.from;
+    const div=document.createElement('div'); div.className='msg '+(me?'me':'other');
+    div.innerHTML=`<div class="bubble">${m.text}</div><div class="sub" style="font-size:11px">${new Date(m.ts).toLocaleString()}</div>`;
+    box.appendChild(div);
+  });
+  box.scrollTop=box.scrollHeight;
+}
+$('#sendMsg').onclick=()=>{
+  if(!STATE.activeThread){alert('Sohbet seçin.'); return}
+  const val=$('#msgInput').value.trim(); if(!val) return;
+  const from = STATE.role==='supplier'?'supplier':'clinic';
+  const [rfqId,supplierId]=STATE.activeThread.split('__');
+  DB.sendMessage({rfqId, supplierId, from, text:val});
+  $('#msgInput').value=''; renderMessages(); renderAdmin();
+};
+
+/* ====== ADMIN ====== */
 function renderAdmin(){
-  const reqs = LS.get('requests', []);
-  const sups = LS.get('suppliers', []);
-  const rows = [
-    ...reqs.map(r=>({t:'Talep', name:r.name, cat:r.cat, date:r.date, id:r.id})),
-    ...sups.map(s=>({t:'Tedarikçi', name:s.name, cat:(s.specs||[]).join(','), date:new Date().toISOString(), id:s.id}))
-  ].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const tb = $('#adminTbl');
-  if(!rows.length){ tb.innerHTML = `<tr><td colspan="5">Veri yok</td></tr>`;return; }
-  tb.innerHTML = rows.slice(0,30).map(x=>`
-    <tr><td>${x.id}</td><td>${x.t}</td><td>${x.name}</td><td>${x.cat||'-'}</td><td>${new Date(x.date).toLocaleString()}</td></tr>
-  `).join('');
+  $('#mStat1').textContent=DB.rfqs().length;
+  $('#mStat2').textContent=DB.offers().length;
+  $('#mStat3').textContent=DB.suppliers().length;
+  $('#mStat4').textContent=DB.messages().length;
+
+  const rfqHead=`<tr><th>ID</th><th>Ürün</th><th>Kat.</th><th>Qty</th><th>Termin</th><th>Durum</th></tr>`;
+  $('#tblRFQ').innerHTML = rfqHead + DB.rfqs().slice().reverse().map(r=>
+    `<tr><td>${r.id.slice(-6)}</td><td>${r.product}</td><td>${r.cat}</td><td>${r.qty}</td><td>${r.deadline}</td><td>${r.status}</td></tr>`
+  ).join('');
+
+  const offHead=`<tr><th>ID</th><th>RFQ</th><th>Tedarikçi</th><th>Fiyat</th><th>Aşama</th><th>Aksiyon</th></tr>`;
+  $('#tblOffers').innerHTML = offHead + DB.offers().slice().reverse().map(o=>{
+    const r=DB.rfqs().find(x=>x.id===o.rfqId); const s=DB.suppliers().find(x=>x.id===o.supplierId);
+    return `<tr><td>${o.id.slice(-6)}</td><td>${r?.product||'-'}</td><td>${s?.name||'-'}</td><td>${(o.price||0).toLocaleString()} TL</td>
+      <td>${o.stage}</td><td><button class="btn" data-adv="${o.id}">Sonraki Aşama</button></td></tr>`;
+  }).join('');
+  $$('#tblOffers [data-adv]').forEach(b=>{
+    b.onclick=()=>{DB.advanceOffer(b.dataset.adv); renderAdmin(); alert('Aşama güncellendi.');}
+  });
+
+  const msgHead=`<tr><th>Zaman</th><th>RFQ</th><th>Tedarikçi</th><th>Kimden</th><th>Mesaj</th></tr>`;
+  $('#tblMsgs').innerHTML = msgHead + DB.messages().slice().reverse().map(m=>{
+    const r=DB.rfqs().find(x=>x.id===m.rfqId); const s=DB.suppliers().find(x=>x.id===m.supplierId);
+    return `<tr><td>${new Date(m.ts).toLocaleString()}</td><td>${r?.product||'-'}</td><td>${s?.name||'-'}</td><td>${m.from}</td><td>${m.text}</td></tr>`;
+  }).join('');
 }
 
-/* ============ NAV & THEME ============ */
-document.querySelectorAll('.nav-link').forEach(a=>{
-  a.addEventListener('click', e=>{ e.preventDefault(); setActivePage(a.dataset.page) })
-});
-function initTheme(){
-  const saved = localStorage.getItem('meditek-theme');
-  const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const mode = saved || (sysDark?'dark':'light');
-  if(mode==='dark') document.documentElement.setAttribute('data-theme','dark');
-  $('#themeBtn').textContent = mode==='dark' ? '☀️' : '🌙';
+/* ====== RENDER ALL ====== */
+function renderAll(){
+  renderVitrine();
+  renderClinicRFQs();
+  renderSupplierRFQs();
+  renderThreads(); renderMessages();
+  renderAdmin();
 }
-$('#themeBtn').addEventListener('click', ()=>{
-  const isDark = document.documentElement.getAttribute('data-theme')==='dark';
-  if(isDark){ document.documentElement.removeAttribute('data-theme'); localStorage.setItem('meditek-theme','light'); $('#themeBtn').textContent='🌙'; }
-  else { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('meditek-theme','dark'); $('#themeBtn').textContent='☀️'; }
-});
-
-/* ============ INIT ============ */
-ensureLists();
-seedSuppliersIfEmpty();
-buildChips();
-initTheme();
-renderSupplierGrid();
-renderAdmin();
-renderAllReq();
-
+renderAll();
 </script>
 </body>
 </html>
