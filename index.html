@@ -1,349 +1,399 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="light">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Meditek • Tedarik Vitrini & Paneller</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Meditek • Tedarik Vitrini & Paneller (Pilot)</title>
+
 <style>
-/* ========== TOKENS ========== */
+/* =========================
+   TOKENS & THEME
+   ========================= */
 :root{
-  --bg: #fbfbfc;
-  --ink: #0f1720;
-  --muted: #5f6b77;
-  --line: #e6e8ec;
+  --bg: #f8fafc;
+  --ink: #0b1220;
+  --muted:#637083;
+  --line:#e6e8ee;
 
-  --glass-bg: rgba(255,255,255,.72);
-  --glass-br: 20px;
-  --glass-blur: 28px;
-  --glass-border: rgba(255,255,255,.65);
-  --glass-shadow: 0 10px 30px rgba(15, 23, 32, .08);
+  --panel: rgba(255,255,255,.78);
+  --panel-blur: 24px;
+  --panel-bd: rgba(255,255,255,.50);
+  --panel-shadow: 0 10px 30px rgba(11,18,32,.08);
 
-  --accent: #111;
-  --accent-ink: #fff;
+  --chip:#eef2f6;
 
-  --ok: #16a34a;
-  --warn: #f59e0b;
-  --info: #2563eb;
+  --accent:#0f172a;
+  --accent-ink:#fff;
+
+  --ok:#16a34a;
+  --warn:#f59e0b;
+  --info:#2563eb;
   --danger:#dc2626;
 
-  --chip-bg:#f3f4f6;
+  --r:16px;
+  --r-lg:22px;
 
-  --radius:18px;
+  --maxw: 1100px;
+
+  --focus: 0 0 0 3px rgba(37,99,235,.35);
 }
 
 html[data-theme="dark"]{
-  --bg: #0c0d0f;
-  --ink: #f3f5f7;
-  --muted:#9aa3ad;
-  --line:#2a2e33;
+  --bg:#0b0d11;
+  --ink:#e8ecf2;
+  --muted:#9aa6b2;
+  --line:#242932;
 
-  --glass-bg: rgba(20,22,26,.70);
-  --glass-br: 20px;
-  --glass-blur: 26px;
-  --glass-border: rgba(255,255,255,.14);
-  --glass-shadow: 0 20px 40px rgba(0,0,0,.45);
+  --panel: rgba(18,20,26,.75);
+  --panel-blur: 22px;
+  --panel-bd: rgba(255,255,255,.14);
+  --panel-shadow: 0 18px 38px rgba(0,0,0,.45);
+
+  --chip:#151922;
 
   --accent:#e5e7eb;
-  --accent-ink:#111;
+  --accent-ink:#0b0d11;
 
-  --chip-bg:#161a1f;
-}
-
-*{box-sizing:border-box} body{
-  margin:0; background:
-  radial-gradient(1200px 600px at -10% -10%, rgba(0,0,0,.06), transparent 60%),
-  radial-gradient(900px 500px at 110% 10%, rgba(0,0,0,.05), transparent 60%),
-  var(--bg);
-  color:var(--ink); font: 500 15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Inter,Helvetica,Arial;
+  --focus: 0 0 0 3px rgba(229,231,235,.28);
 }
 
-/* NAV */
-.nav{
-  position:sticky; top:16px; z-index:9;
-  width:min(1100px,92%); margin:16px auto 12px;
-  padding:10px 14px; border-radius:24px;
-  background:var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(1.05);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.05);
-  border:1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,.45);
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  color:var(--ink);
+  background:
+    radial-gradient(1400px 700px at -10% -10%, rgba(0,0,0,.05), transparent 60%),
+    radial-gradient(1000px 500px at 110% 0%, rgba(0,0,0,.05), transparent 60%),
+    var(--bg);
+  font: 500 15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
-.nav .row{display:flex; align-items:center; gap:10px; justify-content:space-between}
-.nav .brand{font-weight:800; letter-spacing:.2px}
-.nav .pill{display:flex; gap:6px; align-items:center}
-.btn, .chip{
-  border:1px solid var(--line); border-radius:14px;
-  background:transparent; color:var(--ink);
-  padding:8px 12px; cursor:pointer;
-}
-.btn:hover{background:var(--chip-bg)}
-.btn.primary{border-color:var(--accent); background:var(--accent); color:var(--accent-ink)}
-.switch{
-  border:1px solid var(--line); border-radius:14px; display:flex; padding:3px; gap:3px;
-  background:var(--chip-bg)
-}
-.switch button{
-  border:none; background:transparent; padding:6px 10px; border-radius:10px; color:var(--muted); cursor:pointer
-}
-.switch button.active{background:var(--ink); color:var(--bg)}
 
-/* LAYOUT */
-.wrap{width:min(1100px,92%); margin:24px auto 80px}
+/* Reduce motion, safer on mobile */
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+
+/* =========================
+   PRIMITIVES
+   ========================= */
+.container{width:min(var(--maxw),92%); margin-inline:auto}
 .section{margin:18px 0}
-.glass{
-  background:var(--glass-bg);
-  border-radius:var(--glass-br);
-  backdrop-filter: blur(var(--glass-blur)) saturate(1.08) contrast(1.03);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.08) contrast(1.03);
-  border:1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,.55);
-  padding:22px;
+.panel{
+  background:var(--panel);
+  backdrop-filter: blur(var(--panel-blur)) saturate(1.05);
+  -webkit-backdrop-filter: blur(var(--panel-blur)) saturate(1.05);
+  border:1px solid var(--panel-bd);
+  border-radius: var(--r-lg);
+  box-shadow: var(--panel-shadow), inset 0 1px 0 rgba(255,255,255,.45);
+  padding:16px;
 }
-h1{font-size:40px; margin:8px 0 6px}
-h2{font-size:22px; margin:0 0 12px}
+h1{font-size:clamp(26px, 2.5vw, 40px); line-height:1.15; margin:6px 0}
+h2{font-size:clamp(18px, 1.7vw, 22px); margin:0 0 10px}
+h3{font-size:16px; margin:0 0 8px}
 .sub{color:var(--muted)}
 
-/* GRID */
-.grid{display:grid; gap:14px}
-.grid.cards{grid-template-columns: repeat(auto-fit,minmax(280px,1fr))}
-
-/* CARDS */
-.card{padding:18px; border-radius:var(--radius); border:1px solid var(--line); background:rgba(255,255,255,.82)}
-html[data-theme="dark"] .card{background:rgba(22,24,28,.78)}
-.card .title{font-weight:700; font-size:16px}
-.meta{display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 2px}
-.chip{background:var(--chip-bg); border-color:transparent; color:var(--ink)}
-.badge{padding:4px 10px; border-radius:999px; font:700 11px/1 ui-sans-serif; display:inline-flex; gap:6px; align-items:center}
-.badge.ok{background:rgba(22,163,74,.1); color:var(--ok)}
-.badge.warn{background:rgba(245,158,11,.12); color:var(--warn)}
-.badge.info{background:rgba(37,99,235,.12); color:var(--info)}
-.badge.muted{background:var(--chip-bg); color:var(--muted)}
-
-/* DRAWER */
-.drawer{
-  position:fixed; inset:0; display:none;
+/* Buttons & Chips */
+.btn,.chip{
+  appearance:none; border:1px solid var(--line);
+  background:transparent; color:var(--ink);
+  border-radius:12px; padding:10px 12px; cursor:pointer;
+  font:600 14px/1 ui-sans-serif;
 }
+.btn:hover{background:var(--chip)}
+.btn:focus{outline:none; box-shadow:var(--focus)}
+.btn.primary{border-color:var(--accent); background:var(--accent); color:var(--accent-ink)}
+.btn.sm{padding:8px 10px; font-size:13px; border-radius:10px}
+
+.switch{display:inline-flex; gap:4px; padding:4px; background:var(--chip); border:1px solid var(--line); border-radius:999px}
+.switch button{border:0; background:transparent; padding:8px 12px; border-radius:999px; color:var(--muted); cursor:pointer}
+.switch button.active{background:var(--ink); color:var(--accent-ink)}
+.switch button:focus{outline:none; box-shadow:var(--focus)}
+
+.badge{
+  display:inline-flex; align-items:center; gap:6px; padding:4px 10px;
+  border-radius:999px; font:700 11px/1 ui-sans-serif;
+}
+.badge.ok{background:rgba(22,163,74,.12); color:var(--ok)}
+.badge.warn{background:rgba(245,158,11,.14); color:var(--warn)}
+.badge.info{background:rgba(37,99,235,.14); color:var(--info)}
+.badge.muted{background:var(--chip); color:var(--muted)}
+
+.chip{background:var(--chip); border-color:transparent}
+
+/* Inputs */
+.field{
+  width:100%; padding:10px 12px; border:1px solid var(--line);
+  border-radius:12px; background:transparent; color:var(--ink)
+}
+.field:focus{outline:none; box-shadow:var(--focus)}
+
+/* Grid helpers */
+.grid{display:grid; gap:12px}
+.grid.cards{grid-template-columns: repeat(auto-fit, minmax(260px, 1fr))}
+.grid.two{grid-template-columns: 1.15fr .85fr}
+@media (max-width:980px){ .grid.two{grid-template-columns:1fr} }
+
+/* Card */
+.card{
+  padding:14px; border:1px solid var(--line); border-radius:var(--r); background:rgba(255,255,255,.85)
+}
+html[data-theme="dark"] .card{background:rgba(20,22,28,.82)}
+.card .title{font-weight:800; font-size:16px}
+
+/* Table */
+.table-wrap{border:1px solid var(--line); border-radius:12px; overflow:auto}
+.table{width:100%; min-width:680px; border-collapse:collapse}
+.table th,.table td{padding:10px 12px; border-bottom:1px solid var(--line); text-align:left}
+.table th{background:var(--chip); font-weight:800}
+
+/* Nav */
+.nav{
+  position:sticky; top:12px; z-index:50;
+  margin:14px auto 10px; padding:10px 14px;
+  border-radius:24px; background:var(--panel);
+  backdrop-filter: blur(var(--panel-blur)) saturate(1.05);
+  -webkit-backdrop-filter: blur(var(--panel-blur)) saturate(1.05);
+  border:1px solid var(--panel-bd); box-shadow: var(--panel-shadow), inset 0 1px 0 rgba(255,255,255,.45);
+}
+.nav .row{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.nav .brand{font-weight:900; letter-spacing:.2px}
+
+/* Drawer (Filters) */
+.drawer{position:fixed; inset:0; display:none}
 .drawer.on{display:block}
-.drawer .mask{
-  position:absolute; inset:0; background:rgba(0,0,0,.3)
-}
+.drawer .scrim{position:absolute; inset:0; background:rgba(0,0,0,.35)}
 .drawer .panel{
-  position:absolute; top:0; left:0; height:100%; width:min(420px,92%);
-  background:var(--glass-bg); backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border-right:1px solid var(--glass-border); padding:20px; overflow:auto
+  position:absolute; top:0; left:0; height:100%; width:min(420px, 92%);
+  background:var(--panel); backdrop-filter: blur(var(--panel-blur));
+  -webkit-backdrop-filter: blur(var(--panel-blur));
+  border-right:1px solid var(--panel-bd); padding:18px; overflow:auto
 }
-.drawer h3{margin:0 0 12px}
-.rowv{display:flex; flex-wrap:wrap; gap:10px}
 
-/* TABLE */
-.table{width:100%; border-collapse:collapse; border:1px solid var(--line); border-radius:12px; overflow:hidden}
-.table th, .table td{padding:10px 12px; border-bottom:1px solid var(--line); text-align:left}
-.table th{background:var(--chip-bg)}
-
-/* CHAT */
+/* Chat */
 .chat{
-  display:grid; grid-template-columns:260px 1fr; gap:14px
+  display:grid; grid-template-columns: 280px 1fr; gap:12px; min-height:420px
 }
-.threads{border:1px solid var(--line); border-radius:12px; overflow:hidden; height:420px; display:flex; flex-direction:column}
-.threads .item{padding:12px; border-bottom:1px solid var(--line); cursor:pointer}
-.threads .item.active{background:var(--chip-bg)}
-.room{border:1px solid var(--line); border-radius:12px; height:420px; display:flex; flex-direction:column}
-.room .msgs{flex:1; overflow:auto; padding:12px}
-.msg{margin:8px 0; max-width:80%}
+@media (max-width:860px){ .chat{grid-template-columns:1fr; min-height:520px} }
+.threads{border:1px solid var(--line); border-radius:12px; overflow:auto; max-height:460px; background:transparent}
+.thread-item{padding:12px; border-bottom:1px solid var(--line); cursor:pointer}
+.thread-item.active{background:var(--chip)}
+.room{
+  border:1px solid var(--line); border-radius:12px; display:flex; min-height:320px; overflow:hidden
+}
+.msgs{flex:1; overflow:auto; padding:12px; background:transparent}
+.msg{max-width:80%; margin:8px 0}
 .msg .bubble{padding:10px 12px; border-radius:12px}
+.msg.other .bubble{background:var(--chip)}
 .msg.me{margin-left:auto; text-align:right}
 .msg.me .bubble{background:var(--info); color:#fff}
-.msg.other .bubble{background:var(--chip-bg)}
-.room .composer{display:flex; gap:8px; padding:10px; border-top:1px solid var(--line)}
-.room .composer input{flex:1; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:transparent; color:var(--ink)}
+.composer{display:flex; gap:8px; padding:10px; border-top:1px solid var(--line); background:transparent}
 
-/* FOOT */
-.footer{color:var(--muted); font-size:13px; text-align:center; margin:28px 0}
-
-/* MOBILE */
-@media (max-width:860px){
-  .chat{grid-template-columns:1fr}
-}
+/* Footer */
+.footer{color:var(--muted); font-size:13px; text-align:center; margin:22px 0}
+.hide-mobile{display:inline}
+@media (max-width:600px){ .hide-mobile{display:none} }
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<div class="nav">
+<div class="nav container" role="navigation" aria-label="Üst gezinme">
   <div class="row">
-    <div class="pill">
-      <button id="btnDrawer" class="btn">☰ Kategoriler</button>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button id="btnDrawer" class="btn sm" aria-controls="drawer" aria-expanded="false">☰ Filtreler</button>
       <div class="brand">Meditek</div>
     </div>
-    <div class="pill" style="gap:8px">
-      <div class="switch" id="roleSwitch">
-        <button data-role="clinic" class="active">Klinik</button>
-        <button data-role="supplier">Tedarikçi</button>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="switch" id="roleSwitch" role="tablist" aria-label="Rol">
+        <button data-role="clinic" class="active" role="tab" aria-selected="true">Klinik</button>
+        <button data-role="supplier" role="tab" aria-selected="false">Tedarikçi</button>
       </div>
-      <div class="switch" id="themeSwitch">
-        <button data-theme="light" class="active">☀︎</button>
-        <button data-theme="dark">🌙</button>
+      <div class="switch" id="themeSwitch" aria-label="Tema">
+        <button data-theme="light" class="active" aria-label="Açık tema">☀︎</button>
+        <button data-theme="dark" aria-label="Koyu tema">🌙</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- FILTER DRAWER -->
-<div id="drawer" class="drawer">
-  <div class="mask" data-close></div>
-  <div class="panel glass">
+<div id="drawer" class="drawer" aria-hidden="true">
+  <div class="scrim" data-close></div>
+  <aside class="panel" aria-label="Filtreler">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-      <h3>Filtreler</h3><button class="btn" data-close>✕</button>
+      <h2 style="margin:0">Filtreler</h2>
+      <button class="btn sm" data-close aria-label="Filtreleri kapat">✕</button>
     </div>
-    <div class="sub" style="margin-bottom:12px">Kategori, etiket ve arama ile vitrini süz.</div>
-    <div class="section">
-      <h4>Kategori</h4>
-      <div id="filterCats" class="rowv"></div>
-    </div>
-    <div class="section">
-      <h4>Arama</h4>
-      <input id="filterQuery" placeholder="Tedarikçi, ürün, şehir..." style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--ink)" />
-    </div>
-    <div class="section">
-      <h4>Etiket</h4>
-      <div id="filterTags" class="rowv"></div>
-    </div>
+    <p class="sub" style="margin:0 0 12px">Kategori, etiket ve arama ile vitrini süz.</p>
+
+    <section class="section">
+      <h3>Kategori</h3>
+      <div id="filterCats" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </section>
+
+    <section class="section">
+      <h3>Arama</h3>
+      <input id="filterQuery" class="field" placeholder="Tedarikçi, ürün, şehir…" />
+    </section>
+
+    <section class="section">
+      <h3>Etiket</h3>
+      <div id="filterTags" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </section>
+
     <div class="section" style="display:flex;gap:8px">
       <button id="applyFilters" class="btn primary">Uygula</button>
       <button id="clearFilters" class="btn">Temizle</button>
     </div>
-  </div>
+  </aside>
 </div>
 
-<div class="wrap">
+<main class="container" id="main">
   <!-- HERO -->
-  <div class="glass section">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+  <section class="panel section" aria-label="Kısa tanıtım">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
       <div>
         <h1>Tedarikçi Vitrini</h1>
         <div class="sub">Şeffaf, hızlı ve güvenli tedarik ağı</div>
       </div>
       <div class="badge ok">🎯 Pilot ücretsiz – güvenle deneyin</div>
     </div>
-  </div>
+  </section>
 
   <!-- VITRIN -->
-  <div class="section">
+  <section class="section" aria-label="Vitrin">
     <div class="grid cards" id="supplierList"></div>
-  </div>
+  </section>
 
   <!-- PANELS -->
-  <div class="section">
-    <div class="grid" style="grid-template-columns:1.2fr .8fr; gap:16px">
+  <section class="section">
+    <div class="grid two" style="gap:14px">
       <!-- Clinic Panel -->
-      <div class="glass">
+      <div class="panel" aria-label="Klinik Paneli">
         <h2>📌 Klinik Paneli</h2>
-        <div class="sub" style="margin-bottom:8px">Talep oluşturun; tedarikçiler teklif versin ve mesajlaşın.</div>
+        <p class="sub" style="margin-bottom:8px">Talep (RFQ) oluşturun; tedarikçiler teklif versin, mesajlaşın.</p>
+
         <form id="formRFQ" class="card" style="margin-bottom:12px">
           <div class="title" style="margin-bottom:10px">Yeni Talep (RFQ)</div>
-          <div class="grid" style="grid-template-columns:1fr 1fr; gap:10px">
-            <input id="rfqProduct" placeholder="Ürün adı (örn. Ultrason)" class="field">
-            <select id="rfqCat" class="field">
+          <div class="grid" style="grid-template-columns:1fr 1fr">
+            <input id="rfqProduct" class="field" placeholder="Ürün adı (örn. Ultrason)">
+            <select id="rfqCat" class="field" title="Kategori">
               <option value="">Kategori</option>
               <option>Tıbbi Cihaz</option><option>Sarf</option><option>Laboratuvar</option><option>Görüntüleme</option><option>Veteriner</option><option>Güzellik</option>
             </select>
-            <input id="rfqQty" type="number" placeholder="Miktar" class="field">
-            <input id="rfqDeadline" type="date" class="field">
+            <input id="rfqQty" class="field" type="number" placeholder="Miktar">
+            <input id="rfqDeadline" class="field" type="date" placeholder="Termin">
           </div>
-          <input id="rfqNote" placeholder="Açıklama (opsiyonel)" class="field" style="margin-top:10px">
-          <div style="display:flex;gap:8px;margin-top:10px">
+          <input id="rfqNote" class="field" placeholder="Açıklama (opsiyonel)" style="margin-top:10px">
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
             <button class="btn primary" type="submit">Talep Oluştur</button>
             <button id="btnSeeRFQs" class="btn" type="button">Taleplerim</button>
           </div>
         </form>
-        <div id="clinicRFQs" class="grid cards"></div>
+
+        <div id="clinicRFQs" class="grid cards" aria-live="polite"></div>
       </div>
 
       <!-- Supplier Panel -->
-      <div class="glass">
+      <div class="panel" aria-label="Tedarikçi Paneli">
         <h2>🏭 Tedarikçi Paneli</h2>
-        <div class="sub" style="margin-bottom:8px">Uygun RFQ’ları görün, teklif verin, aşamaları ilerletin.</div>
+        <p class="sub" style="margin-bottom:8px">Uygun RFQ’ları görün, teklif verin, aşamaları ilerletin.</p>
+
         <form id="formSupplier" class="card" style="margin-bottom:12px">
           <div class="title" style="margin-bottom:10px">Hızlı Kayıt / Güncelle</div>
-          <input id="supName" placeholder="Şirket adı" class="field">
-          <input id="supEmail" placeholder="E-posta" class="field">
-          <input id="supCity" placeholder="Şehir" class="field">
-          <input id="supTags" placeholder="Sertifikalar (CE, ISO, TİTUBB, FDA)" class="field">
-          <input id="supSpecs" placeholder="Uzmanlıklar (virgülle: Tıbbi Cihaz, Görüntüleme…)" class="field">
+          <input id="supName" class="field" placeholder="Şirket adı">
+          <input id="supEmail" class="field" placeholder="E-posta">
+          <input id="supCity" class="field" placeholder="Şehir">
+          <input id="supTags" class="field" placeholder="Sertifikalar (CE, ISO, TİTUBB, FDA)">
+          <input id="supSpecs" class="field" placeholder="Uzmanlıklar (virgülle: Tıbbi Cihaz, Görüntüleme…)">
           <button class="btn primary" type="submit">Kaydet</button>
         </form>
-        <div id="supplierRFQs" class="grid cards"></div>
+
+        <div id="supplierRFQs" class="grid cards" aria-live="polite"></div>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- MESSAGES -->
-  <div class="section glass">
+  <section class="section panel" aria-label="Mesajlar">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px">
       <h2>💬 Mesajlar</h2>
-      <span class="sub" id="whoAmI"></span>
+      <span class="sub" id="whoAmI">—</span>
     </div>
     <div class="chat" id="chatArea">
-      <div class="threads" id="threadList"></div>
+      <div class="threads" id="threadList" role="listbox" aria-label="Sohbetler"></div>
       <div class="room">
-        <div class="msgs" id="msgs"></div>
+        <div class="msgs" id="msgs" aria-live="polite"></div>
         <div class="composer">
-          <input id="msgInput" placeholder="Mesaj yazın…" />
+          <input id="msgInput" class="field" placeholder="Mesaj yazın…" aria-label="Mesaj">
           <button class="btn primary" id="sendMsg">Gönder</button>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- ADMIN -->
-  <div class="section glass">
-    <div style="display:flex;justify-content:space-between;align-items:center">
+  <section class="section panel" aria-label="Admin Paneli">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
       <h2>🛠️ Admin Paneli</h2>
       <div class="badge muted">Demo veri – localStorage</div>
     </div>
-    <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+
+    <div class="grid" style="grid-template-columns:repeat(4,1fr); gap:10px">
       <div class="card"><div class="title">Toplam Talep</div><div id="mStat1" style="font-size:26px;font-weight:800">0</div></div>
       <div class="card"><div class="title">Toplam Teklif</div><div id="mStat2" style="font-size:26px;font-weight:800">0</div></div>
       <div class="card"><div class="title">Tedarikçi</div><div id="mStat3" style="font-size:26px;font-weight:800">0</div></div>
       <div class="card"><div class="title">Mesaj</div><div id="mStat4" style="font-size:26px;font-weight:800">0</div></div>
     </div>
+
     <div class="section">
       <h3>Talepler</h3>
-      <table class="table" id="tblRFQ"></table>
+      <div class="table-wrap"><table class="table" id="tblRFQ"></table></div>
     </div>
+
     <div class="section">
       <h3>Teklifler</h3>
-      <table class="table" id="tblOffers"></table>
+      <div class="table-wrap"><table class="table" id="tblOffers"></table></div>
     </div>
+
     <div class="section">
       <h3>Mesajlar</h3>
-      <table class="table" id="tblMsgs"></table>
+      <div class="table-wrap"><table class="table" id="tblMsgs"></table></div>
     </div>
-  </div>
+  </section>
 
-  <div class="footer">© Meditek Pilot – cam efektli arayüz • Tema: <span id="themeLabel">Açık</span></div>
-</div>
+  <footer class="footer">© Meditek Pilot — ferah & tutarlı arayüz • Tema: <span id="themeLabel">Açık</span></footer>
+</main>
 
 <script>
-/* ====== UTIL ====== */
-const $=(sel,root=document)=>root.querySelector(sel);
-const $$=(sel,root=document)=>[...root.querySelectorAll(sel)];
+/* =========================
+   UTIL
+   ========================= */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const uid=()=>Math.random().toString(36).slice(2)+Date.now().toString(36);
 
-/* ====== DATA LAYER (localStorage) ====== */
+/* Reset via ?reset=1 */
+if(new URLSearchParams(location.search).get('reset')==='1'){ localStorage.clear(); }
+
+/* =========================
+   DATA (localStorage)
+   ========================= */
 const DB={
-  get(key,def){return JSON.parse(localStorage.getItem(key)||JSON.stringify(def))},
-  set(key,val){localStorage.setItem(key,JSON.stringify(val))},
+  get(k,def){try{return JSON.parse(localStorage.getItem(k)??JSON.stringify(def))}catch{ return def }},
+  set(k,v){localStorage.setItem(k, JSON.stringify(v))},
 
   suppliers(){return DB.get('suppliers',[])},
   saveSupplier(s){
     const arr=DB.suppliers();
-    const i=arr.findIndex(x=>x.email===s.email);
-    if(i>-1) arr[i]={...arr[i],...s}
-    else arr.push({...s,id:uid()});
+    const i=arr.findIndex(x=>x.email===s.email && s.email);
+    if(i>-1) arr[i]={...arr[i],...s};
+    else arr.push({...s, id:uid()});
     DB.set('suppliers',arr);
-    return arr.find(x=>x.email===s.email);
+    return s.email ? arr.find(x=>x.email===s.email) : arr.at(-1);
   },
 
   rfqs(){return DB.get('rfqs',[])},
@@ -352,14 +402,6 @@ const DB={
     arr.push({...r,id:uid(),created:Date.now(),status:'open'});
     DB.set('rfqs',arr);
   },
-  advanceOffer(ofId){
-    const steps=['Ordered','Processing','Dispatched','Delivered'];
-    const offs=DB.offers();
-    const o=offs.find(x=>x.id===ofId); if(!o) return;
-    const idx=steps.indexOf(o.stage||'Ordered');
-    o.stage=steps[Math.min(idx+1,steps.length-1)];
-    DB.set('offers',offs);
-  },
 
   offers(){return DB.get('offers',[])},
   saveOffer(o){
@@ -367,56 +409,76 @@ const DB={
     offs.push({...o,id:uid(),created:Date.now(),stage:'Ordered'});
     DB.set('offers',offs);
   },
+  advanceOffer(ofId){
+    const steps=['Ordered','Processing','Dispatched','Delivered'];
+    const offs=DB.offers(); const o=offs.find(x=>x.id===ofId); if(!o) return;
+    o.stage=steps[Math.min(steps.indexOf(o.stage)+1, steps.length-1)];
+    DB.set('offers',offs);
+  },
 
   messages(){return DB.get('messages',[])},
   sendMessage(m){
-    const arr=DB.messages();
-    arr.push({...m,id:uid(),ts:Date.now()});
-    DB.set('messages',arr);
+    const arr=DB.messages(); arr.push({...m,id:uid(),ts:Date.now()}); DB.set('messages',arr);
   }
 };
 
-/* ====== SEED ====== */
+/* =========================
+   SEED (idempotent)
+   ========================= */
 (function seed(){
-  if(DB.suppliers().length) return;
-  DB.set('suppliers',[
-    {id:uid(), name:'MediTech Solutions', email:'meditech@demo.com', city:'İstanbul', tags:['CE','ISO'], specs:['Tıbbi Cihaz','Görüntüleme']},
-    {id:uid(), name:'LabPro', email:'labpro@demo.com', city:'Ankara', tags:['CE'], specs:['Laboratuvar','Sarf']},
-    {id:uid(), name:'BeautyTech', email:'beauty@demo.com', city:'İzmir', tags:['CE','FDA'], specs:['Güzellik','Estetik Cihazlar']}
-  ]);
-  DB.set('rfqs',[
-    {id:uid(), product:'Ultrason Cihazı', cat:'Görüntüleme', qty:1, deadline:'2025-09-30', note:'Yetkili satıcı tercih', created:Date.now()-86400000, status:'open', clinic:'Demo Klinik'},
-    {id:uid(), product:'Kan Sayım Kiti', cat:'Laboratuvar', qty:50, deadline:'2025-09-20', note:'Kedi&köpek için', created:Date.now()-43200000, status:'open', clinic:'Demo Vet'}
-  ]);
-  const rfq=DB.rfqs()[0]; const sup=DB.suppliers()[0];
-  DB.set('messages',[{id:uid(), rfqId:rfq.id, supplierId:sup.id, from:'clinic', text:'Merhaba, demo görüşmesi.', ts:Date.now()-3600000}]);
+  if(DB.suppliers().length===0){
+    DB.set('suppliers',[
+      {id:uid(), name:'MediTech Solutions', email:'meditech@demo.com', city:'İstanbul', tags:['CE','ISO'], specs:['Tıbbi Cihaz','Görüntüleme']},
+      {id:uid(), name:'LabPro', email:'labpro@demo.com', city:'Ankara', tags:['CE'], specs:['Laboratuvar','Sarf']},
+      {id:uid(), name:'BeautyTech', email:'beauty@demo.com', city:'İzmir', tags:['CE','FDA'], specs:['Güzellik','Estetik Cihazlar']}
+    ]);
+  }
+  if(DB.rfqs().length===0){
+    DB.set('rfqs',[
+      {id:uid(), product:'Ultrason Cihazı', cat:'Görüntüleme', qty:1, deadline:'2025-09-30', note:'Yetkili satıcı tercih', created:Date.now()-86400000, status:'open', clinic:'Demo Klinik'},
+      {id:uid(), product:'Kan Sayım Kiti', cat:'Laboratuvar', qty:50, deadline:'2025-09-20', note:'Kedi&köpek için', created:Date.now()-43200000, status:'open', clinic:'Demo Vet'}
+    ]);
+  }
+  const rfq=DB.rfqs()[0], sup=DB.suppliers()[0];
+  if(DB.messages().length===0 && rfq && sup){
+    DB.set('messages',[{id:uid(), rfqId:rfq.id, supplierId:sup.id, from:'clinic', text:'Merhaba, demo görüşmesi.', ts:Date.now()-3600000}]);
+  }
 })();
 
-/* ====== STATE ====== */
-let STATE={
-  role:'clinic', // clinic | supplier
+/* =========================
+   STATE
+   ========================= */
+const STATE={
+  role:'clinic',
   supplierId: DB.suppliers()[0]?.id || null,
   activeThread:null,
   filters:{cats:[], tags:[], q:''}
 };
 
-/* ====== THEME ====== */
-const setTheme=(t)=>{
+/* =========================
+   THEME
+   ========================= */
+const applyTheme=(t)=>{
   document.documentElement.setAttribute('data-theme', t==='dark'?'dark':'light');
   $('#themeLabel').textContent = t==='dark'?'Koyu':'Açık';
   $$('#themeSwitch button').forEach(b=>b.classList.toggle('active', b.dataset.theme===t));
   localStorage.setItem('theme', t);
 };
-setTheme(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+applyTheme(localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
 $('#themeSwitch').addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b) return;
-  setTheme(b.dataset.theme);
+  applyTheme(b.dataset.theme);
 });
 
-/* ====== ROLE / PROFILE ====== */
+/* =========================
+   ROLE
+   ========================= */
 const setRole=(role)=>{
   STATE.role=role;
-  $$('#roleSwitch button').forEach(b=>b.classList.toggle('active', b.dataset.role===role));
+  $$('#roleSwitch button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.role===role);
+    b.setAttribute('aria-selected', b.dataset.role===role ? 'true':'false');
+  });
   const label = role==='clinic' ? 'Klinik profili' :
     `Tedarikçi: ${(DB.suppliers().find(s=>s.id===STATE.supplierId)||{}).name||'Seçili değil'}`;
   $('#whoAmI').textContent = label;
@@ -428,32 +490,35 @@ $('#roleSwitch').addEventListener('click',e=>{
 });
 setRole(STATE.role);
 
-/* ====== DRAWER (Filters) ====== */
+/* =========================
+   DRAWER (Filters)
+   ========================= */
+const drawer=$('#drawer');
+const openDrawer=()=>{ drawer.classList.add('on'); drawer.setAttribute('aria-hidden','false'); $('#btnDrawer').setAttribute('aria-expanded','true'); };
+const closeDrawer=()=>{ drawer.classList.remove('on'); drawer.setAttribute('aria-hidden','true'); $('#btnDrawer').setAttribute('aria-expanded','false'); };
+$('#btnDrawer').onclick=openDrawer;
+$$('[data-close]').forEach(x=>x.onclick=closeDrawer);
+drawer.addEventListener('click',e=>{ if(e.target.matches('.scrim,[data-close]')) closeDrawer(); });
+
 const CATS=['Tıbbi Cihaz','Sarf','Laboratuvar','Görüntüleme','Veteriner','Güzellik'];
 const TAGS=['CE','ISO','TİTUBB','FDA'];
 
-const drawChips=(arr, el, active=[])=>{
+function drawChips(arr, el, active){
   el.innerHTML='';
   arr.forEach(x=>{
     const b=document.createElement('button');
-    b.className='chip'; b.textContent=x;
+    b.className='chip'; b.textContent=x; b.type='button';
     if(active.includes(x)) b.style.outline='2px solid var(--ink)';
     b.addEventListener('click',()=>{
-      if(active.includes(x)) active.splice(active.indexOf(x),1);
-      else active.push(x);
-      drawChips(arr,el,active);
+      const i=active.indexOf(x);
+      if(i>-1) active.splice(i,1); else active.push(x);
+      drawChips(arr, el, active);
     });
     el.appendChild(b);
   });
-  return active;
-};
-STATE.filters.cats = drawChips(CATS, $('#filterCats'), STATE.filters.cats);
-STATE.filters.tags = drawChips(TAGS, $('#filterTags'), STATE.filters.tags);
-
-const openDrawer=()=>$('#drawer').classList.add('on');
-const closeDrawer=()=>$('#drawer').classList.remove('on');
-$('#btnDrawer').onclick=openDrawer;
-$$('[data-close]').forEach(x=>x.onclick=closeDrawer);
+}
+drawChips(CATS, $('#filterCats'), STATE.filters.cats);
+drawChips(TAGS, $('#filterTags'), STATE.filters.tags);
 
 $('#applyFilters').onclick=()=>{
   STATE.filters.q = $('#filterQuery').value.trim().toLowerCase();
@@ -462,17 +527,18 @@ $('#applyFilters').onclick=()=>{
 $('#clearFilters').onclick=()=>{
   STATE.filters={cats:[], tags:[], q:''};
   $('#filterQuery').value='';
-  STATE.filters.cats = drawChips(CATS, $('#filterCats'), STATE.filters.cats);
-  STATE.filters.tags = drawChips(TAGS, $('#filterTags'), STATE.filters.tags);
+  drawChips(CATS, $('#filterCats'), STATE.filters.cats);
+  drawChips(TAGS, $('#filterTags'), STATE.filters.tags);
   renderVitrine();
 };
 
-/* ====== VITRINE ====== */
+/* =========================
+   VITRIN
+   ========================= */
 function renderVitrine(){
   const box=$('#supplierList'); box.innerHTML='';
   let list=DB.suppliers();
 
-  // filters
   if(STATE.filters.cats.length){
     list=list.filter(s=>s.specs?.some(sp=>STATE.filters.cats.includes(sp)));
   }
@@ -480,92 +546,98 @@ function renderVitrine(){
     list=list.filter(s=>s.tags?.some(t=>STATE.filters.tags.includes(t)));
   }
   if(STATE.filters.q){
-    list=list.filter(s=>(s.name+s.city+s.email+(s.specs||[]).join()+ (s.tags||[]).join()).toLowerCase().includes(STATE.filters.q))
+    const q=STATE.filters.q;
+    list=list.filter(s=> (s.name+s.city+s.email+(s.specs||[]).join()+(s.tags||[]).join()).toLowerCase().includes(q));
   }
 
   if(!list.length){
-    box.innerHTML=`<div class="glass"><div class="sub">Filtrelere uygun tedarikçi bulunamadı.</div></div>`;
+    box.innerHTML=`<div class="panel"><div class="sub">Filtrelere uygun tedarikçi bulunamadı.</div></div>`;
     return;
   }
 
   list.forEach(s=>{
-    const card=document.createElement('div');
-    card.className='card';
-    card.innerHTML=`
-      <div class="title" style="display:flex;justify-content:space-between;align-items:center">
-        <div>${s.name}</div>
+    const el=document.createElement('div'); el.className='card'; el.innerHTML=`
+      <div class="title" style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+        <span>${s.name}</span>
         <span class="badge muted">${s.city||'—'}</span>
       </div>
-      <div class="meta">
-        ${(s.specs||[]).map(x=>`<span class="chip">${x}</span>`).join('')}
-      </div>
-      <div class="meta">
-        ${(s.tags||[]).map(x=>`<span class="chip">${x}</span>`).join('')}
-      </div>
-      <div class="sub" style="margin:8px 0">💡 Ör. Ultrason 150–500 bin TL</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn primary" data-act="rfq">RFQ Oluştur</button>
-        <button class="btn" data-act="msg">Mesaj Gönder</button>
+      <div class="sub hide-mobile" style="margin:6px 0 4px">Ör. Ultrason 150–500 bin TL</div>
+      <div class="grid" style="grid-template-columns:1fr 1fr; align-items:start">
+        <div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin:6px 0">
+            ${(s.specs||[]).map(x=>`<span class="chip">${x}</span>`).join('')}
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            ${(s.tags||[]).map(x=>`<span class="chip">${x}</span>`).join('')}
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap">
+          <button class="btn primary" data-act="rfq">RFQ Oluştur</button>
+          <button class="btn" data-act="msg">Mesaj Gönder</button>
+        </div>
       </div>
     `;
-    card.querySelector('[data-act="rfq"]').onclick=()=>{
-      // ön doldurma
+    el.querySelector('[data-act="rfq"]').onclick=()=>{
       $('#rfqProduct').value='Ultrason Cihazı';
       $('#rfqCat').value='Görüntüleme';
-      $('html,body'); window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+      window.scrollTo({top: $('#formRFQ').getBoundingClientRect().top + window.scrollY - 80, behavior:'smooth'});
     };
-    card.querySelector('[data-act="msg"]').onclick=()=>{
-      STATE.role='clinic'; setRole('clinic');
-      openChatThread(findOrCreateThread(DB.rfqs()[0]?.id, s.id));
+    el.querySelector('[data-act="msg"]').onclick=()=>{
+      setRole('clinic');
+      const firstRfq = DB.rfqs()[0];
+      if(!firstRfq){ alert('Önce bir RFQ oluşturun.'); return; }
+      openChatThread(findOrCreateThread(firstRfq.id, s.id));
     };
-    box.appendChild(card);
+    box.appendChild(el);
   });
 }
 
-/* ====== CLINIC PANEL ====== */
-const fieldStyle=`
-  .field{width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:12px; background:transparent; color:var(--ink)}
-`; const style=document.createElement('style'); style.innerHTML=fieldStyle; document.head.appendChild(style);
-
+/* =========================
+   CLINIC PANEL
+   ========================= */
 $('#formRFQ').addEventListener('submit',e=>{
   e.preventDefault();
   const r={
     product:$('#rfqProduct').value.trim(),
     cat:$('#rfqCat').value.trim(),
-    qty:+$('#rfqQty').value||1,
+    qty:+($('#rfqQty').value||1),
     deadline:$('#rfqDeadline').value,
     note:$('#rfqNote').value.trim(),
     clinic:'Klinik (Pilot)'
   };
-  if(!r.product||!r.cat||!r.deadline){alert('Ürün, kategori ve termin zorunlu.'); return}
+  if(!r.product||!r.cat||!r.deadline){ alert('Ürün, kategori ve termin zorunlu.'); return }
   DB.saveRFQ(r); e.target.reset();
-  renderClinicRFQs(); renderAdmin(); alert('Talep eklendi.');
+  renderClinicRFQs(); renderAdmin();
+  alert('Talep eklendi.');
 });
-
 $('#btnSeeRFQs').onclick=()=>renderClinicRFQs();
 
 function renderClinicRFQs(){
   const box=$('#clinicRFQs'); const rfqs=DB.rfqs().slice().reverse();
+  if(!rfqs.length){ box.innerHTML = `<div class="card sub">Henüz talep yok.</div>`; return; }
   box.innerHTML = rfqs.map(r=>`
     <div class="card">
-      <div style="display:flex;justify-content:space-between">
+      <div style="display:flex;justify-content:space-between;gap:8px">
         <div class="title">${r.product}</div>
         <span class="badge ${r.status==='open'?'info':'ok'}">${r.status}</span>
       </div>
-      <div class="meta"><span class="chip">${r.cat}</span><span class="chip">${r.qty} adet</span><span class="chip">Termin: ${r.deadline}</span></div>
-      <div class="sub">${r.note||''}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 2px">
+        <span class="chip">${r.cat}</span>
+        <span class="chip">${r.qty} adet</span>
+        <span class="chip">Termin: ${r.deadline}</span>
+      </div>
+      <div class="sub" style="margin-top:4px">${r.note||''}</div>
       <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn" data-view="${r.id}">Teklifler</button>
+        <button class="btn sm" data-view="${r.id}">Teklifler</button>
       </div>
     </div>
   `).join('');
-
-  $$('#clinicRFQs [data-view]').forEach(b=>{
-    b.onclick=()=>openOffersFor(b.dataset.view);
-  });
+  $$('#clinicRFQs [data-view]').forEach(b=> b.onclick=()=>openOffersFor(b.dataset.view));
 }
 
-/* ====== SUPPLIER PANEL ====== */
+/* =========================
+   SUPPLIER PANEL
+   ========================= */
 $('#formSupplier').addEventListener('submit',e=>{
   e.preventDefault();
   const sup={
@@ -582,23 +654,26 @@ $('#formSupplier').addEventListener('submit',e=>{
 
 function renderSupplierRFQs(){
   const box=$('#supplierRFQs'); const me=DB.suppliers().find(s=>s.id===STATE.supplierId);
-  if(!me){box.innerHTML='<div class="card sub">Önce sağ üstten tedarikçi profili seçin / kaydedin.</div>'; return}
-  let rfqs=DB.rfqs().filter(r=> me.specs?.includes(r.cat) || me.specs?.some(x=>r.product.toLowerCase().includes(x.toLowerCase())));
-  if(!rfqs.length){box.innerHTML='<div class="card sub">Uzmanlığınıza uygun açık talep bulunamadı.</div>'; return}
+  if(!me){ box.innerHTML='<div class="card sub">Önce sağ üstten tedarikçi profili seçin / kaydedin.</div>'; return; }
+  const rfqs=DB.rfqs().filter(r=> me.specs?.includes(r.cat) || me.specs?.some(x=>r.product.toLowerCase().includes(x.toLowerCase())));
+  if(!rfqs.length){ box.innerHTML='<div class="card sub">Uzmanlığınıza uygun açık talep bulunamadı.</div>'; return; }
+
   box.innerHTML = rfqs.slice().reverse().map(r=>`
     <div class="card">
-      <div style="display:flex;justify-content:space-between">
+      <div style="display:flex;justify-content:space-between;gap:8px">
         <div class="title">${r.product}</div>
         <span class="badge info">open</span>
       </div>
-      <div class="meta"><span class="chip">${r.cat}</span><span class="chip">${r.qty} adet</span></div>
-      <div class="sub">Termin: ${r.deadline}</div>
-      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn primary" data-offer="${r.id}">Teklif Ver</button>
-        <button class="btn" data-chat="${r.id}">Mesaj Aç</button>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin:6px 0">
+        <span class="chip">${r.cat}</span><span class="chip">${r.qty} adet</span><span class="chip">Termin: ${r.deadline}</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary sm" data-offer="${r.id}">Teklif Ver</button>
+        <button class="btn sm" data-chat="${r.id}">Mesaj Aç</button>
       </div>
     </div>
   `).join('');
+
   $$('#supplierRFQs [data-offer]').forEach(b=>{
     b.onclick=()=>{
       const price=prompt('Teklif fiyatı (TL)'); if(!price) return;
@@ -607,41 +682,42 @@ function renderSupplierRFQs(){
     };
   });
   $$('#supplierRFQs [data-chat]').forEach(b=>{
-    b.onclick=()=>{
-      openChatThread(findOrCreateThread(b.dataset.chat, STATE.supplierId));
-    };
+    b.onclick=()=> openChatThread(findOrCreateThread(b.dataset.chat, STATE.supplierId));
   });
 }
 
-/* ====== OFFERS VIEW (clinic side) ====== */
+/* =========================
+   OFFERS (Clinic side)
+   ========================= */
 function openOffersFor(rfqId){
   const offs=DB.offers().filter(o=>o.rfqId===rfqId);
-  if(!offs.length){alert('Bu talepte henüz teklif yok.'); return}
+  if(!offs.length){ alert('Bu talepte henüz teklif yok.'); return; }
   const txt=offs.map(o=>{
     const s=DB.suppliers().find(x=>x.id===o.supplierId);
-    return `${s?.name||'Tedarikçi'} • ${o.price.toLocaleString()} TL • Aşama: ${o.stage}`;
+    return `${s?.name||'Tedarikçi'} • ${o.price.toLocaleString('tr-TR')} TL • Aşama: ${o.stage}`;
   }).join('\n');
-  alert('Gelen teklifler:\n\n'+txt+'\n\nAdmin panelinden detay/ilerletme yapabilirsiniz.');
+  alert('Gelen teklifler:\n\n'+txt+'\n\nAdmin panelinden aşama güncelleyebilirsiniz.');
 }
 
-/* ====== CHAT ====== */
-function threadKey(rfqId, supplierId){ return `${rfqId}__${supplierId}` }
+/* =========================
+   CHAT
+   ========================= */
+function threadKey(rfqId,supplierId){ return `${rfqId}__${supplierId}` }
 function listThreads(role){
   const msgs=DB.messages();
   const map=new Map();
   msgs.forEach(m=>{
     const key=threadKey(m.rfqId,m.supplierId);
-    const arr=map.get(key)||[];
-    arr.push(m); map.set(key,arr);
+    const arr=map.get(key)||[]; arr.push(m); map.set(key,arr);
   });
-  // include empty threads from offers too
+  // include threads from offers (even if no message yet)
   DB.offers().forEach(o=>{
-    const key=threadKey(o.rfqId,o.supplierId); if(!map.has(key)) map.set(key,[]);
+    const key=threadKey(o.rfqId,o.supplierId);
+    if(!map.has(key)) map.set(key,[]);
   });
 
-  // role filter
-  return [...map.entries()].filter(([key,arr])=>{
-    const [rfqId,supplierId]=key.split('__');
+  return [...map.entries()].filter(([key])=>{
+    const [,supplierId]=key.split('__');
     if(role==='clinic') return true;
     return supplierId===STATE.supplierId;
   }).map(([key,arr])=>{
@@ -651,53 +727,60 @@ function listThreads(role){
     return {id:key, rfq, sup, last:arr.slice(-1)[0]};
   }).sort((a,b)=>(b.last?.ts||0)-(a.last?.ts||0));
 }
-function findOrCreateThread(rfqId,supplierId){
-  return threadKey(rfqId,supplierId);
-}
-function openChatThread(key){
-  STATE.activeThread=key;
-  renderThreads(); renderMessages();
-}
+function findOrCreateThread(rfqId,supplierId){ return threadKey(rfqId,supplierId) }
+
+function openChatThread(key){ STATE.activeThread=key; renderThreads(); renderMessages(); }
+
 function renderThreads(){
   const list=listThreads(STATE.role);
   const box=$('#threadList'); box.innerHTML='';
-  if(!list.length){ box.innerHTML=`<div class="item sub">Henüz sohbet yok</div>`; return}
+  if(!list.length){ box.innerHTML=`<div class="thread-item sub">Henüz sohbet yok</div>`; return }
   list.forEach(t=>{
-    const el=document.createElement('div'); el.className='item'+(STATE.activeThread===t.id?' active':'');
-    el.innerHTML=`<div style="font-weight:700">${t.sup?.name||'Tedarikçi'}</div>
-      <div class="sub" style="font-size:12px">${t.rfq?.product||'RFQ'}${t.last? ' — '+t.last.text.slice(0,28):''}</div>`;
+    const el=document.createElement('div');
+    el.className='thread-item'+(STATE.activeThread===t.id?' active':'');
+    el.innerHTML=`<div style="font-weight:800">${t.sup?.name||'Tedarikçi'}</div>
+                  <div class="sub" style="font-size:12px">${t.rfq?.product||'RFQ'}${t.last?' — '+t.last.text.slice(0,32):''}</div>`;
     el.onclick=()=>openChatThread(t.id);
     box.appendChild(el);
   });
   if(!STATE.activeThread && list[0]) STATE.activeThread=list[0].id;
 }
+
 function renderMessages(){
-  const msgs=DB.messages();
   const box=$('#msgs'); box.innerHTML='';
   if(!STATE.activeThread) return;
+
   const [rfqId, supplierId]=STATE.activeThread.split('__');
   const rfq=DB.rfqs().find(r=>r.id===rfqId);
   const sup=DB.suppliers().find(s=>s.id===supplierId);
-  const arr=msgs.filter(m=>m.rfqId===rfqId && m.supplierId===supplierId);
-  if(rfq) box.insertAdjacentHTML('beforeend', `<div class="sub" style="margin-bottom:6px">Konu: <b>${rfq.product}</b> – ${sup?.name||''}</div>`);
+  const arr=DB.messages().filter(m=>m.rfqId===rfqId && m.supplierId===supplierId);
+
+  if(rfq){
+    box.insertAdjacentHTML('beforeend', `<div class="sub" style="margin-bottom:6px">Konu: <b>${rfq.product}</b> – ${sup?.name||''}</div>`);
+  }
   arr.forEach(m=>{
-    const me = (STATE.role==='supplier' ? 'supplier':'clinic') === m.from;
-    const div=document.createElement('div'); div.className='msg '+(me?'me':'other');
-    div.innerHTML=`<div class="bubble">${m.text}</div><div class="sub" style="font-size:11px">${new Date(m.ts).toLocaleString()}</div>`;
-    box.appendChild(div);
+    const iAmSupplier = STATE.role==='supplier';
+    const me = (iAmSupplier ? 'supplier':'clinic') === m.from;
+    const row=document.createElement('div'); row.className='msg '+(me?'me':'other');
+    row.innerHTML=`<div class="bubble">${m.text}</div><div class="sub" style="font-size:11px">${new Date(m.ts).toLocaleString('tr-TR')}</div>`;
+    box.appendChild(row);
   });
   box.scrollTop=box.scrollHeight;
 }
+
 $('#sendMsg').onclick=()=>{
-  if(!STATE.activeThread){alert('Sohbet seçin.'); return}
+  if(!STATE.activeThread){ alert('Sohbet seçin.'); return }
   const val=$('#msgInput').value.trim(); if(!val) return;
   const from = STATE.role==='supplier'?'supplier':'clinic';
   const [rfqId,supplierId]=STATE.activeThread.split('__');
   DB.sendMessage({rfqId, supplierId, from, text:val});
-  $('#msgInput').value=''; renderMessages(); renderAdmin();
+  $('#msgInput').value='';
+  renderMessages(); renderAdmin(); renderThreads();
 };
 
-/* ====== ADMIN ====== */
+/* =========================
+   ADMIN
+   ========================= */
 function renderAdmin(){
   $('#mStat1').textContent=DB.rfqs().length;
   $('#mStat2').textContent=DB.offers().length;
@@ -712,29 +795,45 @@ function renderAdmin(){
   const offHead=`<tr><th>ID</th><th>RFQ</th><th>Tedarikçi</th><th>Fiyat</th><th>Aşama</th><th>Aksiyon</th></tr>`;
   $('#tblOffers').innerHTML = offHead + DB.offers().slice().reverse().map(o=>{
     const r=DB.rfqs().find(x=>x.id===o.rfqId); const s=DB.suppliers().find(x=>x.id===o.supplierId);
-    return `<tr><td>${o.id.slice(-6)}</td><td>${r?.product||'-'}</td><td>${s?.name||'-'}</td><td>${(o.price||0).toLocaleString()} TL</td>
-      <td>${o.stage}</td><td><button class="btn" data-adv="${o.id}">Sonraki Aşama</button></td></tr>`;
+    return `<tr>
+      <td>${o.id.slice(-6)}</td>
+      <td>${r?.product||'-'}</td>
+      <td>${s?.name||'-'}</td>
+      <td>${(o.price||0).toLocaleString('tr-TR')} TL</td>
+      <td>${o.stage}</td>
+      <td><button class="btn sm" data-adv="${o.id}">Sonraki Aşama</button></td>
+    </tr>`;
   }).join('');
   $$('#tblOffers [data-adv]').forEach(b=>{
-    b.onclick=()=>{DB.advanceOffer(b.dataset.adv); renderAdmin(); alert('Aşama güncellendi.');}
+    b.onclick=()=>{ DB.advanceOffer(b.dataset.adv); renderAdmin(); alert('Aşama güncellendi.'); };
   });
 
   const msgHead=`<tr><th>Zaman</th><th>RFQ</th><th>Tedarikçi</th><th>Kimden</th><th>Mesaj</th></tr>`;
   $('#tblMsgs').innerHTML = msgHead + DB.messages().slice().reverse().map(m=>{
     const r=DB.rfqs().find(x=>x.id===m.rfqId); const s=DB.suppliers().find(x=>x.id===m.supplierId);
-    return `<tr><td>${new Date(m.ts).toLocaleString()}</td><td>${r?.product||'-'}</td><td>${s?.name||'-'}</td><td>${m.from}</td><td>${m.text}</td></tr>`;
+    return `<tr><td>${new Date(m.ts).toLocaleString('tr-TR')}</td><td>${r?.product||'-'}</td><td>${s?.name||'-'}</td><td>${m.from}</td><td>${m.text}</td></tr>`;
   }).join('');
 }
 
-/* ====== RENDER ALL ====== */
+/* =========================
+   RENDER ALL
+   ========================= */
 function renderAll(){
   renderVitrine();
   renderClinicRFQs();
   renderSupplierRFQs();
-  renderThreads(); renderMessages();
+  renderThreads();
+  renderMessages();
   renderAdmin();
 }
 renderAll();
+
+/* =========================
+   ACCESSIBILITY: Enter to send
+   ========================= */
+$('#msgInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); $('#sendMsg').click(); }
+});
 </script>
 </body>
 </html>
